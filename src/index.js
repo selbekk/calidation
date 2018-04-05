@@ -1,4 +1,5 @@
 import Form from './Form';
 import Validation from './Validation';
+import FormValidation from './FormValidation';
 
-export { Form, Validation };
+export { Form, Validation, FormValidation };
