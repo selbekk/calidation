@@ -6,12 +6,12 @@ Gangsta ass validation.
 yarn add dayshun
 ```
 
-## What dis?
+## What's this?
 
 This is a validation library for React! It provides you with powerful and
 flexible validation, which is probably what you're looking for.
 
-## How do you roll?
+## How do you even?
 
 Let's say you have a form you want to validate. Remove that crusty ass
 `<form />` tag and replace it with a fly af `<FormValidation />` component!
