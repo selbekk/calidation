@@ -71,7 +71,9 @@ class Form extends Component {
             (error, [validatorName, validatorConfig]) => {
                 if (error) return error;
 
-                // TODO: Implement validateIf and all the other fancyness
+                if (typeof validatorConfig === 'string') {
+                    validatorConfig = { message: validatorConfig };
+                }
 
                 return this.props.validators[validatorName](validatorConfig)(
                     allFields[name],
