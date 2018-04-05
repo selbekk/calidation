@@ -6,3 +6,6 @@ node_modules
 
 # OS stuff
 .DS_Store
+
+# Built files
+dist

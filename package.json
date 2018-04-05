@@ -2,23 +2,28 @@
     "name": "dayshun",
     "version": "1.0.0",
     "description": "A validation lib for React",
+    "main": "dist/index.js",
     "keywords": ["validation", "react", "react validation"],
-    "main": "src/index.js",
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "build": "babel --out-dir dist --ignore *.spec.js src",
+        "precommit": "pretty-quick --staged"
+    },
     "dependencies": {
         "react": "16.3.1",
         "react-dom": "16.3.1",
         "react-scripts": "1.1.4"
     },
     "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
         "husky": "^0.14.3",
         "prettier": "^1.11.1",
-        "pretty-quick": "^1.4.1"
+        "pretty-quick": "^1.4.1",
+        "rimraf": "^2.6.2"
     },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject",
-        "precommit": "pretty-quick --staged"
-    }
+    "files": ["README.md", "dist"]
 }
