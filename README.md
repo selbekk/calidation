@@ -83,6 +83,94 @@ will be called with the field values and errors.
 This library comes equipped with a lot of validators. You'll find them in the 
 code for now, but I'll document them later.
 
+### Default validators
+
+dayshun comes with a lot of validators built in.
+
+#### `isRequired`
+
+Validates that a field has some content.
+
+```js
+someField: {
+    isRequired: 'This field is required', // shorthand
+    isRequired: { message: 'This field is required' },
+}
+```
+
+#### `isNumber`
+
+Validates that a field only contains numeric characters
+
+```js
+someField: {
+    isNumber: 'You need to enter a number', // shorthand
+    isNumber: { message: 'You need to enter a number' },
+}
+```
+
+#### `isEqual`
+
+Validates that a field equals a given value. The value is cast to a String, 
+and then checked for equality with the `===` operator.
+
+```js
+someField: {
+    isEqual: { 
+        message: 'You need to enter "yes"',
+        value: 'yes',
+    },
+}
+```
+
+
+#### `isGreaterThan` / `isLessThan`
+
+Validates that a field is greater or less than a given number.
+
+```js
+someField: {
+    isGreaterThan: { 
+        message: 'You need to be at least 18 years old',
+        value: 17,
+    },
+    isLessThan: {
+        message: 'You can\'t be older than 70 years old',
+        value: 66,
+    }
+}
+```
+
+#### `isEmail`
+
+Validates that a field is a potentially valid email address.
+
+```js
+someField: {
+    isEmail: 'Please enter a valid e-mail address', // Shorthand
+    isEmail: { message: 'Please enter a valid e-mail address' },
+}
+```
+
+#### `isRegexMatch`
+
+Validates that a field matches a given regular expression.
+
+```js
+someField: {
+    isRegexMatch: { 
+        message: 'You need to enter four digits',
+        regex: /^\d{4}$/,
+    },
+}
+```
+
+### Deluxe validators
+
+I haven't implemented any yet, but in the future I imagine you can import some 
+validators that aren't used that often from `dayshun/validators`. But that's a
+future issue to adress.
+
 ### Custom validators
 
 You can add your own too! In that case, wrap your app with the 
@@ -105,7 +193,4 @@ first receives a config object, then the value, and then returns either an
 error message or `null`.
 
 ### API Docs
-
-There are more APIs to document. I'll get to it later
-
 
