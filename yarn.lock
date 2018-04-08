@@ -1661,6 +1661,13 @@ dir-glob@^2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
+dom-testing-library@^1.0.0, dom-testing-library@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/dom-testing-library/-/dom-testing-library-1.1.0.tgz#84a3e88039fd1061046c2fb664ea72f2f5401a09"
+  dependencies:
+    jest-matcher-utils "^22.4.3"
+    wait-for-expect "^0.4.0"
+
 domexception@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/domexception/-/domexception-1.0.1.tgz#937442644ca6a31261ef36e3ec677fe805582c90"
@@ -4264,6 +4271,13 @@ react-dom@^16.3.1:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+react-testing-library@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-2.0.0.tgz#6c6ee82c00a6c6afa7f86ab688064b4eed9f6e4e"
+  dependencies:
+    dom-testing-library "^1.0.0"
+    wait-for-expect "0.4.0"
+
 react@^16.3.1:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.3.1.tgz#4a2da433d471251c69b6033ada30e2ed1202cfd8"
@@ -5298,6 +5312,10 @@ w3c-hr-time@^1.0.1:
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.1.tgz#82ac2bff63d950ea9e3189a58a65625fedf19045"
   dependencies:
     browser-process-hrtime "^0.1.2"
+
+wait-for-expect@0.4.0, wait-for-expect@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/wait-for-expect/-/wait-for-expect-0.4.0.tgz#341c96ab89d6102a0169a9be6cd0de354de92c17"
 
 walker@~1.0.5:
   version "1.0.7"

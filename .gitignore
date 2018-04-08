@@ -4,6 +4,9 @@ node_modules
 # Logs
 *.log
 
+# Code coverage
+coverage
+
 # OS stuff
 .DS_Store
 
