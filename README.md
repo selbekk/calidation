@@ -264,18 +264,20 @@ a future issue to adress.
 ### Custom validators
 
 You can add your own too! In that case, wrap your app with the
-`<ValidatorProvider />` component, and pass it an object with your custom
+`<ValidatorsProvider />` component, and pass it an object with your custom
 validators. It can look like this:
 
 ```js
+import { ValidatorsProvider } from 'calidation';
 const extraValidators = {
-    isEven: config => value => Number(value) % 2 !== 0 ? config.message : null,
-    isOdd: config => value => Number(value) % 2 !== 1 ? config.message : null,
+    isEven: config => value =>
+        Number(value) % 2 !== 0 ? config.message : null,
+    isOdd: config => value => (Number(value) % 2 !== 1 ? config.message : null),
 };
 
-<ValidationProvider validators={extraValidators}>
-  <App />
-</ValidatorProvider>
+<ValidatorsProvider validators={extraValidators}>
+    <App />
+</ValidatorsProvider>;
 ```
 
 See how I implemented those custom validators? It's a curried function that
