@@ -7,12 +7,13 @@ notifications:
 node_js:
   - '9'
 install:
-  - npm install -g codecov
+  - yarn global add codecov
+  - yarn
 script:
-  - npm run test:coverage && codecov
-  - npm run build
+  - yarn test:coverage && codecov
+  - yarn build
 after_success:
-  - npm run travis-deploy-once "npm run semantic-release"
+  - yarn travis-deploy-once "yarn semantic-release"
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
