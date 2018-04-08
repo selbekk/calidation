@@ -17,11 +17,11 @@ const removeFrom = original => fieldsToRemove =>
 
 class Form extends Component {
     static defaultProps = {
-        onSubmitRequested: f => f,
+        onSubmit: f => f,
     };
 
     static propTypes = {
-        onSubmitRequested: func,
+        onSubmit: func,
         validators: shape({}).isRequired,
     };
 
@@ -45,7 +45,7 @@ class Form extends Component {
         e.preventDefault();
         this.setState({ submitted: true });
         const { errors, fields } = this.state;
-        this.props.onSubmitRequested({
+        this.props.onSubmit({
             errors,
             fields,
             isValid: Object.values(errors).every(error => error === null),
