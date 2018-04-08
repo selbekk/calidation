@@ -1,6 +1,6 @@
 {
     "name": "calidation",
-    "version": "0.0.0-development",
+    "version": "0.0.0-semantically-released",
     "description": "A red hot validation library for React",
     "main": "dist/index.js",
     "keywords": ["validation", "react", "react validation"],
