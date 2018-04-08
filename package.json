@@ -1,49 +1,50 @@
 {
-  "name": "calidation",
-  "version": "0.0.0-development",
-  "description": "A red hot validation library for React",
-  "main": "dist/index.js",
-  "keywords": [
-    "validation",
-    "react",
-    "react validation"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/selbekk/calidation"
-  },
-  "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "babel --out-dir dist --ignore *.spec.js src",
-    "precommit": "pretty-quick --staged",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "husky": "^0.14.3",
-    "jest": "^22.4.3",
-    "prettier": "^1.11.1",
-    "pretty-quick": "^1.4.1",
-    "react": "^16.3.1",
-    "react-dom": "^16.3.1",
-    "rimraf": "^2.6.2",
-    "semantic-release": "^15.1.5",
-    "travis-deploy-once": "^4.4.1"
-  },
-  "peerDependencies": {
-    "react": "^16.3.1",
-    "react-dom": "^16.3.1"
-  },
-  "files": [
-    "README.md",
-    "dist"
-  ]
+    "name": "calidation",
+    "version": "0.0.0-development",
+    "description": "A red hot validation library for React",
+    "main": "dist/index.js",
+    "keywords": ["validation", "react", "react validation"],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/selbekk/calidation"
+    },
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "build": "babel --out-dir dist --ignore *.spec.js src",
+        "precommit": "pretty-quick --staged",
+        "commit": "git-cz",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "semantic-release": "semantic-release",
+        "travis-deploy-once": "travis-deploy-once"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "commitizen": "^2.9.6",
+        "cz-conventional-changelog": "^2.1.0",
+        "husky": "^0.14.3",
+        "jest": "^22.4.3",
+        "prettier": "^1.11.1",
+        "pretty-quick": "^1.4.1",
+        "react": "^16.3.1",
+        "react-dom": "^16.3.1",
+        "rimraf": "^2.6.2",
+        "semantic-release": "^15.1.5",
+        "travis-deploy-once": "^4.4.1"
+    },
+    "peerDependencies": {
+        "react": "^16.3.1",
+        "react-dom": "^16.3.1"
+    },
+    "files": ["README.md", "dist"],
+    "config": {
+        "commitizen": {
+            "path": "node_modules/cz-conventional-changelog"
+        }
+    }
 }
