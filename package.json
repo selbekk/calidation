@@ -4,15 +4,13 @@
     "description": "A validation lib for React",
     "main": "dist/index.js",
     "keywords": ["validation", "react", "react validation"],
+    "license": "MIT",
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "babel --out-dir dist --ignore *.spec.js src",
-        "precommit": "pretty-quick --staged"
-    },
-    "dependencies": {
-        "react": "16.3.1",
-        "react-dom": "16.3.1",
-        "react-scripts": "1.1.4"
+        "precommit": "pretty-quick --staged",
+        "test": "jest",
+        "test:watch": "jest --watch"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
@@ -21,9 +19,16 @@
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
         "husky": "^0.14.3",
+        "jest": "^22.4.3",
         "prettier": "^1.11.1",
         "pretty-quick": "^1.4.1",
+        "react": "^16.3.1",
+        "react-dom": "^16.3.1",
         "rimraf": "^2.6.2"
+    },
+    "peerDependencies": {
+        "react": "^16.3.1",
+        "react-dom": "^16.3.1"
     },
     "files": ["README.md", "dist"]
 }
