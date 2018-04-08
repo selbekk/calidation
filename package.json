@@ -15,7 +15,7 @@
         "precommit": "pretty-quick --staged",
         "commit": "git-cz",
         "test": "jest",
-        "test:watch": "jest --watch",
+        "test:watch": "jest --watch --coverage",
         "test:coverage": "jest --coverage",
         "semantic-release": "semantic-release",
         "travis-deploy-once": "travis-deploy-once"
