@@ -52,5 +52,9 @@
     },
     "dependencies": {
         "invariant": "^2.2.4"
+    },
+    "jest": {
+        "coverageDirectory": "./coverage/",
+        "collectCoverage": true
     }
 }

@@ -6,8 +6,10 @@ notifications:
   email: false
 node_js:
   - '9'
+install:
+  - npm install -g codecov
 script:
-  - npm run test
+  - npm run test:coverage && codecov
   - npm run build
 after_success:
   - npm run travis-deploy-once "npm run semantic-release"
