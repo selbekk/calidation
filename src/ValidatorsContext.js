@@ -17,7 +17,7 @@ export class ValidatorsProvider extends Component {
         validators: shape({}),
     };
 
-    state = { ...defaultValidators, ...this.props.validators };
+    state = { ...this.props.validators };
 
     render() {
         return <Provider value={this.state}>{this.props.children}</Provider>;
@@ -30,7 +30,10 @@ export const withValidators = TargetComponent => {
     const WithValidators = props => (
         <Consumer>
             {validators => (
-                <TargetComponent {...props} validators={validators} />
+                <TargetComponent
+                    {...props}
+                    validators={{ ...defaultValidators, ...validators }}
+                />
             )}
         </Consumer>
     );
