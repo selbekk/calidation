@@ -18,29 +18,33 @@ class Validation extends Component {
         unregister: func,
     };
 
-    getInitialFieldValues = () =>
-        Object.keys(this.props.config).reduce(
-            (fields, field) => ({
-                ...fields,
-                [field]: this.props.initialValues[field] || '',
+    getFieldValues = () => {
+        const { config, fields, initialValues } = this.props;
+
+        return Object.keys(config).reduce(
+            (allFields, field) => ({
+                ...allFields,
+                [field]: fields[field] || initialValues[field] || '',
             }),
             {},
         );
+    };
 
     componentDidMount() {
-        this.props.register(this.props.config, this.getInitialFieldValues());
+        this.props.register(this.props.config, this.getFieldValues());
     }
     componentWillUnmount() {
         this.props.unregister(this.props.config);
     }
     render() {
-        const { errors, fields, submitted, children } = this.props;
+        const { errors, fields, submitted, children, config } = this.props;
 
         const childrenArgs = {
             errors,
-            fields,
+            fields: this.getFieldValues(),
             submitted,
         };
+
         return children(childrenArgs);
     }
 }
