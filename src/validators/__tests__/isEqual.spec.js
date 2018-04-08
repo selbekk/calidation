@@ -1,4 +1,4 @@
-import isEqual from './isEqual';
+import isEqual from '../isEqual';
 
 const message = 'fail';
 

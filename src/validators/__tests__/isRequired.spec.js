@@ -1,4 +1,4 @@
-import isRequired from './isRequired';
+import isRequired from '../isRequired';
 
 const message = 'fail';
 const validator = isRequired({ message });

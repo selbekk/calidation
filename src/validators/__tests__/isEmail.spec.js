@@ -1,4 +1,4 @@
-import isEmail from './isEmail';
+import isEmail from '../isEmail';
 
 const message = 'message';
 const validate = isEmail({ message });

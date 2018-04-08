@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
-import { render, Simulate, wait } from 'react-testing-library';
+import { render, Simulate } from 'react-testing-library';
 
-import FormValidation from './FormValidation';
+import { FormValidation, ValidatorsProvider } from '..';
+
 const ExampleForm = ({ fields, errors }) => (
     <Fragment>
         <div>
@@ -111,6 +112,46 @@ describe('<FormValidation />', () => {
         );
 
         expect(getByLabelText('username').value).toBe('test username');
+        expect(queryByTestId('username-error')).toBeNull();
+    });
+});
+
+describe('<ValidatorsProvider />', () => {
+    it('enables custom validators', () => {
+        const customConfig = { ...exampleConfig };
+        customConfig.username.isTheHoff = 'must be the Hoff';
+
+        const hoffValidator = config => value =>
+            value !== 'the hoff' ? config.message : null;
+        const {
+            container,
+            getByLabelText,
+            getByTestId,
+            queryByTestId,
+        } = render(
+            <ValidatorsProvider validators={{ isTheHoff: hoffValidator }}>
+                <FormValidation config={customConfig}>
+                    {props => <ExampleForm {...props} />}
+                </FormValidation>
+            </ValidatorsProvider>,
+        );
+
+        expect(getByTestId('username-error').textContent).toBe(
+            'username required',
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'the boss' },
+        });
+
+        expect(getByTestId('username-error').textContent).toBe(
+            'must be the Hoff',
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'the hoff' },
+        });
+
         expect(queryByTestId('username-error')).toBeNull();
     });
 });

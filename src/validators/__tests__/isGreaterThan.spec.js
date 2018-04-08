@@ -1,4 +1,4 @@
-import isGreaterThan from './isGreaterThan';
+import isGreaterThan from '../isGreaterThan';
 
 const message = 'fail';
 

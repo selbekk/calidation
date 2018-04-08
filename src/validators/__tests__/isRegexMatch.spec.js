@@ -1,4 +1,4 @@
-import isRegexMatch from './isRegexMatch';
+import isRegexMatch from '../isRegexMatch';
 
 const message = 'fail';
 

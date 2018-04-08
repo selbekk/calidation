@@ -1,4 +1,4 @@
-import isNumber from './isNumber';
+import isNumber from '../isNumber';
 
 const validate = isNumber({ message: 'fail' });
 
