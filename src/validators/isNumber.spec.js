@@ -1,18 +1,21 @@
 import isNumber from './isNumber';
 
-const validator = isNumber({ message: 'fail' });
+const validate = isNumber({ message: 'fail' });
 
 describe('isNumber validator', () => {
+    it('accepts the empty string', () => {
+        expect(validate('')).toBe(null);
+    });
     it('accepts when value is a number', () => {
-        expect(validator('-1')).toBe(null);
-        expect(validator('1')).toBe(null);
-        expect(validator('0')).toBe(null);
-        expect(validator('1.000000001')).toBe(null);
-        expect(validator('10e2')).toBe(null);
+        expect(validate('-1')).toBe(null);
+        expect(validate('1')).toBe(null);
+        expect(validate('0')).toBe(null);
+        expect(validate('1.000000001')).toBe(null);
+        expect(validate('10e2')).toBe(null);
     });
     it('rejects when value is not a number', () => {
-        expect(validator('not a number')).toBe('fail');
-        expect(validator('NaN')).toBe('fail');
-        expect(validator('12x21')).toBe('fail');
+        expect(validate('not a number')).toBe('fail');
+        expect(validate('NaN')).toBe('fail');
+        expect(validate('12x21')).toBe('fail');
     });
 });

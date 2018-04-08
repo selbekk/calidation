@@ -3,6 +3,9 @@ import isLessThan from './isLessThan';
 const message = 'fail';
 
 describe('isLessThan validator', () => {
+    it('accepts the empty string', () => {
+        expect(isLessThan({ message, value: '' })('')).toBe(null);
+    });
     it('accepts when value is less than config value', () => {
         expect(isLessThan({ message, value: 1.001 })('1')).toBe(null);
         expect(isLessThan({ message, value: 11 })('10')).toBe(null);

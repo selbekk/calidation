@@ -3,6 +3,9 @@ import isGreaterThan from './isGreaterThan';
 const message = 'fail';
 
 describe('isGreaterThan validator', () => {
+    it('accepts the empty string', () => {
+        expect(isGreaterThan({ message, value: 'arnold' })('')).toBe(null);
+    });
     it('accepts when value is greater than config value', () => {
         expect(isGreaterThan({ message, value: 10 })('10.001')).toBe(null);
         expect(isGreaterThan({ message, value: 10 })('11')).toBe(null);

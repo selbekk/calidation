@@ -3,6 +3,9 @@ import isEqual from './isEqual';
 const message = 'fail';
 
 describe('isEqual validator', () => {
+    it('accepts the empty string', () => {
+        expect(isEqual({ message, value: 'arnold' })('')).toBe(null);
+    });
     it('accepts equal strings', () => {
         expect(isEqual({ message, value: 'arnold' })('arnold')).toBe(null);
         expect(isEqual({ message, value: '' })('')).toBe(null);
@@ -31,7 +34,7 @@ describe('isEqual validator', () => {
 
     it('rejects when value is not equal', () => {
         expect(isEqual({ message, value: 'hi' })('ho')).toBe(message);
-        expect(isEqual({ message, value: '  ' })('')).toBe(message);
+        expect(isEqual({ message, value: '  ' })(' ')).toBe(message);
         expect(isEqual({ message, value: '123' })('321')).toBe(message);
         expect(isEqual({ message, value: 123 })('321')).toBe(message);
         expect(isEqual({ message, value: false })('true')).toBe(message);

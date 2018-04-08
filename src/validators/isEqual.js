@@ -1,4 +1,7 @@
 export default config => value => {
+    if (value === '') {
+        return null;
+    }
     let isValid;
     switch (typeof config.value) {
         case 'number': {

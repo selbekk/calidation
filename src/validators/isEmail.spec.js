@@ -1,32 +1,24 @@
 import isEmail from './isEmail';
 
-const validate = isEmail({ message: 'fail' });
+const message = 'message';
+const validate = isEmail({ message });
 
 describe('isEmail validator', () => {
+    it('accepts the empty string', () => {
+        expect(validate('')).toBe(null);
+    });
     it('accepts valid email addresses', () => {
-        const validEmails = [
-            'test@test.com',
-            'i-am-an@email.com',
-            '123@456.789',
-            'yolo@swag',
-        ];
-
-        validEmails.forEach(validEmail =>
-            expect(validate(validEmail)).toBe(null),
-        );
+        expect(validate('test@test.com')).toBe(null);
+        expect(validate('i-am-an@email.com')).toBe(null);
+        expect(validate('123@456.789')).toBe(null);
+        expect(validate('yolo@swag')).toBe(null);
     });
     it('rejects invalid email addresses', () => {
-        const invalidEmails = [
-            'not an email',
-            'notevenremotely',
-            '@missing.com',
-            'still@',
-            '1234567890',
-            '!)("#!(#/',
-        ];
-
-        invalidEmails.forEach(invalidEmail =>
-            expect(validate(invalidEmail)).toBe('fail'),
-        );
+        expect(validate('not an email')).toBe(message);
+        expect(validate('notevenremotely')).toBe(message);
+        expect(validate('@missing.com')).toBe(message);
+        expect(validate('still@')).toBe(message);
+        expect(validate('1234567890')).toBe(message);
+        expect(validate('(/!&"#(')).toBe(message);
     });
 });
