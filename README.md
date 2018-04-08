@@ -2,7 +2,7 @@
 
 Red hot validation for React 🌶
 
-[![Build Status](https://travis-ci.org/selbekk/calidation.svg?branch=master)](https://travis-ci.org/selbekk/calidation)
+[![Build Status](https://travis-ci.org/selbekk/calidation.svg?branch=master)](https://travis-ci.org/selbekk/calidation) [![codecov](https://codecov.io/gh/selbekk/calidation/branch/master/graph/badge.svg)](https://codecov.io/gh/selbekk/calidation)
 
 ```
 yarn add calidation
