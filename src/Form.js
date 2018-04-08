@@ -79,9 +79,9 @@ class Form extends Component {
                 const validator = this.props.validators[validatorName];
                 invariant(
                     validator,
-                    `You specified a validator that doesn't exist. You specified
-                    ${validatorName}. Available validators:
-                    ${Object.keys(this.props.validators).join(',\n')}`,
+                    "You specified a validator that doesn't exist. You " +
+                        `specified ${validatorName}. Available validators: \n\n` +
+                        Object.keys(this.props.validators).join(',\n'),
                 );
 
                 return validator(validatorConfig)(allFields[name]);
