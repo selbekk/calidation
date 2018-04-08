@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { func, shape } from 'prop-types';
+import invariant from 'invariant';
 import { withValidators } from './ValidatorsContext';
 import { FormProvider } from './FormContext';
 
@@ -75,9 +76,15 @@ class Form extends Component {
                     validatorConfig = { message: validatorConfig };
                 }
 
-                return this.props.validators[validatorName](validatorConfig)(
-                    allFields[name],
+                const validator = this.props.validators[validatorName];
+                invariant(
+                    validator,
+                    `You specified a validator that doesn't exist. You specified
+                    ${validatorName}. Available validators:
+                    ${Object.keys(this.props.validators).join(',\n')}`,
                 );
+
+                return validator(validatorConfig)(allFields[name]);
             },
             null,
         );
