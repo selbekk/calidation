@@ -1,9 +1,9 @@
-# dayshun
+# calidation
 
-Gangsta ass validation.
+Red hot validation for React 🌶
 
 ```
-yarn add dayshun
+yarn add calidation
 ```
 
 ## What's this?
@@ -13,7 +13,7 @@ flexible validation, which is probably what you're looking for.
 
 ## How do you even?
 
-Let's say you have a form you want to validate. Remove that crusty ass
+Let's say you have a form you want to validate. Remove that old school
 `<form />` tag and replace it with a fly af `<FormValidation />` component!
 
 ### Configurate, don't playa hate
@@ -50,9 +50,9 @@ bottom.
 Alright, so this is how it looks:
 
 ```js
-import { FormValidation } from 'dayshun';
+import { FormValidation } from 'calidation';
 
-const config = {}; // We did this above!
+const config = {...}; // We did this above!
 const MyForm = props => (
     <FormValidation onSubmit={props.onSubmit} config={config}>
         {({ fields, errors }) => (
@@ -73,7 +73,7 @@ const MyForm = props => (
 ```
 
 The `<FormValidation />` component accepts a function as a child, which is
-called with an options object containing field values, errors and so far.
+called with an options object containing field values, errors and so on.
 
 The `<FormValidation />` component renders a `<form />` tag, so you get a nicer
 user experience out of the box! You can pass an `onSubmit` event handler, which
@@ -109,6 +109,7 @@ like `<FormValidation />`. Here
 Here's an example:
 
 ```js
+import { Form, Validation } from 'calidation';
 const MyPage = props => (
     <Form onSubmit={props.onSubmit}>
         <Validation config={props.config}>
@@ -168,10 +169,14 @@ someField: {
 },
 ```
 
+Finally, please note that validation happens from top to bottom. The validation
+will quit once it encounters an error, so you can have multiple levels of
+validators if you so please.
+
 ### Default validators
 
-dayshun comes with a lot of validators built in. These should be enough for most
-common use-cases.
+calidation comes with a lot of validators built in. These should be enough for
+most common use-cases.
 
 #### `isRequired`
 
@@ -253,8 +258,8 @@ someField: {
 ### Deluxe validators
 
 I haven't implemented any yet, but in the future I imagine you can import some
-validators that aren't used that often from `dayshun/validators`. But that's a
-future issue to adress.
+validators that aren't used that often from `calidation/validators`. But that's
+a future issue to adress.
 
 ### Custom validators
 
@@ -275,7 +280,8 @@ const extraValidators = {
 
 See how I implemented those custom validators? It's a curried function that
 first receives a config object, then the value, and then returns either an
-error message or `null`.
+error message or `null`. You might want to let them accept the empty string too,
+in case your field is not required.
 
 ## Want to contribute?
 

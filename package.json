@@ -1,7 +1,7 @@
 {
-    "name": "dayshun",
+    "name": "calidation",
     "version": "1.0.0",
-    "description": "A validation lib for React",
+    "description": "A red hot validation library for React",
     "main": "dist/index.js",
     "keywords": ["validation", "react", "react validation"],
     "license": "MIT",
