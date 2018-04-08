@@ -6,7 +6,7 @@ notifications:
   email: false
 node_js:
   - '9'
-scripts:
+script:
   - npm run test
   - npm run build
 after_success:
