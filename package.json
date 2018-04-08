@@ -5,6 +5,10 @@
     "main": "dist/index.js",
     "keywords": ["validation", "react", "react validation"],
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/selbekk/calidation"
+    },
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "babel --out-dir dist --ignore *.spec.js src",
