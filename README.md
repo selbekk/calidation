@@ -264,6 +264,20 @@ someField: {
 },
 ```
 
+#### `isWhitelisted`
+
+Validates that a field is present in a provided whitelist. The whitelist must be
+an array.
+
+```js
+someField: {
+    isWhitelisted : {
+        message: 'You need to be named Chad or Bret',
+        whitelist: ['Chad', 'Brett'],
+    },
+},
+```
+
 ### Deluxe validators
 
 I haven't implemented any yet, but in the future I imagine you can import some
