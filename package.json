@@ -51,7 +51,9 @@
         }
     },
     "dependencies": {
-        "invariant": "^2.2.4"
+        "calidators": "^1.0.0",
+        "invariant": "^2.2.4",
+        "prop-types": "^15.6.1"
     },
     "jest": {
         "coverageDirectory": "./coverage/",

@@ -1132,6 +1132,12 @@ cachedir@^1.1.0:
   dependencies:
     os-homedir "^1.0.1"
 
+calidators@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/calidators/-/calidators-1.0.0.tgz#be223495d93bd91f52d37912a64d370d9d840aeb"
+  dependencies:
+    invariant "^2.2.4"
+
 call-me-maybe@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/call-me-maybe/-/call-me-maybe-1.0.1.tgz#26d208ea89e37b5cbde60250a15f031c16a4d66b"
@@ -4198,7 +4204,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.6.0:
+prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:

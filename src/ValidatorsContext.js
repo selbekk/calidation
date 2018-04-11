@@ -1,6 +1,28 @@
 import React, { Component, createContext } from 'react';
 import { shape } from 'prop-types';
-import defaultValidators from './validators';
+import {
+    isBlacklisted,
+    isEmail,
+    isEqual,
+    isGreaterThan,
+    isLessThan,
+    isRequired,
+    isNumber,
+    isRegexMatch,
+    isWhitelisted,
+} from 'calidators';
+
+const defaultValidators = {
+    isBlacklisted,
+    isEmail,
+    isEqual,
+    isGreaterThan,
+    isLessThan,
+    isRequired,
+    isNumber,
+    isRegexMatch,
+    isWhitelisted,
+};
 
 const { Provider, Consumer } = createContext({});
 
