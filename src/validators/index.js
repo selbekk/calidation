@@ -6,6 +6,7 @@ import isLessThan from './isLessThan';
 import isEmail from './isEmail';
 import isRegexMatch from './isRegexMatch';
 import isWhitelisted from './isWhitelisted';
+import isBlacklisted from './isBlacklisted';
 
 export default {
     isRequired,
@@ -16,4 +17,5 @@ export default {
     isEmail,
     isRegexMatch,
     isWhitelisted,
+    isBlacklisted,
 };

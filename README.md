@@ -270,19 +270,27 @@ Validates that a field is present in a provided whitelist. The whitelist must be
 an array.
 
 ```js
-someField: {
+firstName: {
     isWhitelisted : {
-        message: 'You need to be named Chad or Bret',
-        whitelist: ['Chad', 'Brett'],
+        message: 'Bros only, bro',
+        whitelist: ['Chad', 'Bret'],
     },
 },
 ```
 
-### Deluxe validators
+#### `isBlacklisted`
 
-I haven't implemented any yet, but in the future I imagine you can import some
-validators that aren't used that often from `calidation/validators`. But that's
-a future issue to adress.
+Validates that a field is not present in a provided blacklist. The blacklist
+must be an array.
+
+```js
+firstName: {
+    isBlacklisted : {
+        message: 'Bros are not welcome',
+        blacklist: ['Chad', 'Bret'],
+    },
+},
+```
 
 ### Custom validators
 
