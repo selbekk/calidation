@@ -38,14 +38,14 @@ const config = {
         isRequired: 'Username is required!',
     },
     password: {
-        isRequired: 'Password is required!',
+        isRequired: 'Password is also required!',
     },
 };
 ```
 
 Here, the key is the name of the validator, and the value is the error message.
 You can add as many validators as you want, and they'll be run from top to
-bottom.
+bottom. For more about validators, go to the [validators](#validators) section!
 
 ### Validate that form
 
@@ -54,18 +54,18 @@ Alright, so this is how it looks:
 ```js
 import { FormValidation } from 'calidation';
 
-const config = {...}; // We did this above!
+const config = {...}; // See above
 const MyForm = props => (
     <FormValidation onSubmit={props.onSubmit} config={config}>
-        {({ fields, errors }) => (
+        {({ fields, errors, submitted }) => (
             <>
                 <label>
                     Username: <input name="username" value={fields.username} />
-                    {errors.username && <span>{errors.username}</span>}
+                    {submitted && errors.username && <span>{errors.username}</span>}
                 </label>
                 <label>
                     Password: <input name="password" value={fields.password} />
-                    {errors.password && <span>{errors.password}</span>}
+                    {submitted && errors.password && <span>{errors.password}</span>}
                 </label>
                 <button>Log in</button>
             </>
@@ -123,10 +123,10 @@ const MyPage = props => (
             )}
         </Validation>
         {/* ...tons of other components and other stuff */}
-        <Validation config={props.config}>
+        <Validation config={props.anotherConfig}>
             {({ fields, errors }) => (
                 <>
-                    And what does he do?
+                    What does he do?
                     <input name="dadWork" value={fields.dadWork} />
                 </>
             )}
@@ -136,7 +136,14 @@ const MyPage = props => (
 ```
 
 The `onSubmit` handler will receive a merged object of all the validated fields
-below it, as well as a merged object of all the errors.
+below it, as well as a merged object of all the errors:
+
+```js
+const onSubmit = ({ fields, errors, isValid }) => {
+    // fields and errors now contain both `daddy` and `dadWork`
+    // isValid is true if all forms are valid, otherwise false.
+};
+```
 
 ## Validators
 
