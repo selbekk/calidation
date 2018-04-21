@@ -37,7 +37,7 @@ class Form extends Component {
             ...this.state.fields,
             [e.target.name]: e.target.value,
         };
-        const errors = this.validate(fields);
+        const errors = this.validate(fields, this.state.config);
         this.setState({ errors, fields });
     };
 
@@ -58,8 +58,8 @@ class Form extends Component {
         this.setState({ errors, fields });
     };
 
-    validate = fields =>
-        Object.entries(this.state.config).reduce(
+    validate = (fields, config) =>
+        Object.entries(config).reduce(
             (all, [name, fieldConfig]) => ({
                 ...all,
                 [name]: this.validateField(fieldConfig, name, fields),
@@ -92,10 +92,9 @@ class Form extends Component {
     registerSubComponent = (subComponentConfig, initialValues) => {
         const config = { ...this.state.config, ...subComponentConfig };
         const fields = { ...this.state.fields, ...initialValues };
+        const errors = this.validate(fields, config);
 
-        this.setState({ config, fields }, nextState =>
-            this.setState({ errors: this.validate(nextState.fields) }),
-        );
+        this.setState({ config, fields, errors });
     };
 
     unregisterSubComponent = fieldsToRemove => {
