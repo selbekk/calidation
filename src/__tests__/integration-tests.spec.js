@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { render, Simulate } from 'react-testing-library';
 
-import { FormValidation, ValidatorsProvider } from '..';
+import { Form, Validation, FormValidation, ValidatorsProvider } from '..';
 
 const ExampleForm = ({ fields, errors }) => (
     <Fragment>
@@ -27,7 +27,6 @@ const ExampleForm = ({ fields, errors }) => (
                 <span data-testid="email-error">{errors.email}</span>
             )}
         </div>
-        <button>Submit</button>
     </Fragment>
 );
 
@@ -92,7 +91,6 @@ describe('<FormValidation />', () => {
         Simulate.submit(container.querySelector('form'));
 
         expect(submitSpy).toHaveBeenCalledTimes(1);
-        const submitArgs = submitSpy.mock.calls[0][0];
         expect(submitSpy).toHaveBeenCalledWith({
             errors: { username: 'username required', email: 'email required' },
             fields: { username: '', email: '' },
@@ -153,5 +151,65 @@ describe('<ValidatorsProvider />', () => {
         });
 
         expect(queryByTestId('username-error')).toBeNull();
+    });
+});
+
+const AnotherExampleForm = ({ fields, errors }) => (
+    <Fragment>
+        <div>
+            <label>
+                Favorite color{' '}
+                <input name="color" value={fields.color} onChange={f => f} />
+            </label>
+            {errors.color && (
+                <span data-testid="color-error">{errors.color}</span>
+            )}
+        </div>
+        <div>
+            <label>
+                Phone number{' '}
+                <input
+                    name="phoneNumber"
+                    value={fields.phoneNumber}
+                    onChange={f => f}
+                />
+            </label>
+            {errors.phoneNumber && (
+                <span data-testid="phoneNumber-error">
+                    {errors.phoneNumber}
+                </span>
+            )}
+        </div>
+    </Fragment>
+);
+
+const anotherExampleConfig = {
+    color: {
+        isRequired: 'color required',
+    },
+    phoneNumber: {
+        isRequired: 'phone number required',
+    },
+};
+
+const CompoundExampleForm = props => (
+    <Form onSubmit={props.onSubmit}>
+        <Validation config={exampleConfig}>
+            {props => <ExampleForm {...props} />}
+        </Validation>
+        <Validation config={anotherExampleConfig}>
+            {props => <AnotherExampleForm {...props} />}
+        </Validation>
+    </Form>
+);
+
+describe('<Form> and <Validation />', () => {
+    it('passes all errors down to all validation components', () => {
+        const { getByTestId } = render(<CompoundExampleForm />);
+
+        expect(getByTestId('username-error')).not.toBeNull();
+        expect(getByTestId('email-error')).not.toBeNull();
+        expect(getByTestId('color-error')).not.toBeNull();
+        expect(getByTestId('phoneNumber-error')).not.toBeNull();
     });
 });

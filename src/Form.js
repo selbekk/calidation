@@ -94,18 +94,31 @@ class Form extends Component {
         const fields = { ...this.state.fields, ...initialValues };
         const errors = this.validate(fields, config);
 
-        this.setState({ config, fields, errors });
+        this.setState(prevState => ({
+            config: {
+                ...prevState.config,
+                ...config,
+            },
+            fields: {
+                ...prevState.fields,
+                ...fields,
+            },
+            errors: {
+                ...prevState.errors,
+                ...errors,
+            },
+        }));
     };
 
     unregisterSubComponent = fieldsToRemove => {
         const keys = Object.keys(fieldsToRemove);
         const fields = removeFrom(this.state.fields)(keys);
-        const config = removeFrom(this.state.config)(keys); // TODO: Revalidate errors?
+        const config = removeFrom(this.state.config)(keys);
         const errors = removeFrom(this.state.errors)(keys);
 
         this.setState({
             config,
-            errors,
+            errors: this.validate(fields, config),
             fields,
         });
     };
