@@ -94,7 +94,7 @@ class Form extends Component {
         const fields = { ...this.state.fields, ...initialValues };
 
         this.setState({ config, fields }, nextState =>
-            this.setState({ errors: this.validate(fields) }),
+            this.setState({ errors: this.validate(nextState.fields) }),
         );
     };
 
