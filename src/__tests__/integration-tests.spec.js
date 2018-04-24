@@ -12,6 +12,7 @@ const ExampleForm = ({ fields, errors }) => (
                     name="username"
                     value={fields.username}
                     onChange={f => f}
+                    data-testid="username"
                 />
             </label>
             {errors.username && (
@@ -116,8 +117,13 @@ describe('<FormValidation />', () => {
 
 describe('<ValidatorsProvider />', () => {
     it('enables custom validators', () => {
-        const customConfig = { ...exampleConfig };
-        customConfig.username.isTheHoff = 'must be the Hoff';
+        const customConfig = {
+            ...exampleConfig,
+            username: {
+                ...exampleConfig.username,
+                isTheHoff: 'must be the Hoff',
+            },
+        };
 
         const hoffValidator = config => value =>
             value !== 'the hoff' ? config.message : null;
@@ -159,7 +165,12 @@ const AnotherExampleForm = ({ fields, errors }) => (
         <div>
             <label>
                 Favorite color{' '}
-                <input name="color" value={fields.color} onChange={f => f} />
+                <input
+                    name="color"
+                    value={fields.color}
+                    onChange={f => f}
+                    data-testid="color"
+                />
             </label>
             {errors.color && (
                 <span data-testid="color-error">{errors.color}</span>
@@ -172,6 +183,7 @@ const AnotherExampleForm = ({ fields, errors }) => (
                     name="phoneNumber"
                     value={fields.phoneNumber}
                     onChange={f => f}
+                    data-testid="phoneNumber"
                 />
             </label>
             {errors.phoneNumber && (
@@ -197,19 +209,65 @@ const CompoundExampleForm = props => (
         <Validation config={exampleConfig}>
             {props => <ExampleForm {...props} />}
         </Validation>
-        <Validation config={anotherExampleConfig}>
-            {props => <AnotherExampleForm {...props} />}
-        </Validation>
+        {props.showAnother && (
+            <Validation config={anotherExampleConfig}>
+                {props => <AnotherExampleForm {...props} />}
+            </Validation>
+        )}
     </Form>
 );
 
-describe('<Form> and <Validation />', () => {
+describe('<Form> and <Validation /> side by side', () => {
     it('passes all errors down to all validation components', () => {
-        const { getByTestId } = render(<CompoundExampleForm />);
+        const { getByTestId } = render(
+            <CompoundExampleForm showAnother={true} />,
+        );
 
         expect(getByTestId('username-error')).not.toBeNull();
         expect(getByTestId('email-error')).not.toBeNull();
         expect(getByTestId('color-error')).not.toBeNull();
         expect(getByTestId('phoneNumber-error')).not.toBeNull();
+    });
+
+    it('removes fields from the submit arguments if they are removed from the DOM', () => {
+        const spy = jest.fn();
+        const { container, getByLabelText } = render(
+            <CompoundExampleForm onSubmit={spy} showAnother={true} />,
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'selbekk' },
+        });
+        Simulate.change(getByLabelText('color'), {
+            target: { name: 'color', value: 'red' },
+        });
+        Simulate.submit(container.querySelector('form'));
+
+        expect(spy).toHaveBeenCalledWith(
+            expect.objectContaining({
+                fields: expect.objectContaining({
+                    username: 'selbekk',
+                    email: '',
+                    color: 'red',
+                    phoneNumber: '',
+                }),
+            }),
+        );
+
+        spy.mockReset();
+        render(<CompoundExampleForm onSubmit={spy} showAnother={false} />, {
+            container,
+        });
+
+        Simulate.submit(container.querySelector('form'));
+
+        expect(spy).toHaveBeenCalledWith(
+            expect.objectContaining({
+                fields: {
+                    username: 'selbekk',
+                    email: '',
+                },
+            }),
+        );
     });
 });
