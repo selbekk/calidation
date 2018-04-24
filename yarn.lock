@@ -1133,8 +1133,8 @@ cachedir@^1.1.0:
     os-homedir "^1.0.1"
 
 calidators@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/calidators/-/calidators-1.0.0.tgz#be223495d93bd91f52d37912a64d370d9d840aeb"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/calidators/-/calidators-1.1.0.tgz#a0cc897e8162256408e84a0c0d84172e9631342b"
   dependencies:
     invariant "^2.2.4"
 

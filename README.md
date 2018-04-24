@@ -2,7 +2,7 @@
 
 Red hot validation for React 🌶
 
-[![Build Status](https://travis-ci.org/selbekk/calidation.svg?branch=master)](https://travis-ci.org/selbekk/calidation) [![codecov](https://codecov.io/gh/selbekk/calidation/branch/master/graph/badge.svg)](https://codecov.io/gh/selbekk/calidation)
+[![Build Status](https://travis-ci.org/selbekk/calidation.svg?branch=master)](https://travis-ci.org/selbekk/calidation) [![codecov](https://codecov.io/gh/selbekk/calidation/branch/master/graph/badge.svg)](https://codecov.io/gh/selbekk/calidation) [![npm version](https://badge.fury.io/js/calidators.svg)](https://badge.fury.io/js/calidators)
 
 ```
 yarn add calidation
@@ -12,6 +12,9 @@ yarn add calidation
 
 This is a validation library for React! It provides you with powerful and
 flexible validation, which is probably what you're looking for.
+
+I have written [the best blog post](https://medium.com/@selbekk/introducing-calidation-7d9a79453f7)
+of all time about this.
 
 ## How do you even?
 
@@ -39,6 +42,10 @@ const config = {
     },
     password: {
         isRequired: 'Password is also required!',
+        isMinLength: {
+            message: 'Password must be 8 characters or longer',
+            length: 8,
+        },
     },
 };
 ```
@@ -185,7 +192,8 @@ validators if you so please.
 ### Default validators
 
 calidation comes with a lot of validators built in. These should be enough for
-most common use-cases.
+most common use-cases. You'll find them all in the sister package
+[`calidators`](https://github.com/selbekk/calidators).
 
 #### `isRequired`
 
@@ -288,6 +296,45 @@ firstName: {
     isBlacklisted : {
         message: 'Bros are not welcome',
         blacklist: ['Chad', 'Bret'],
+    },
+},
+```
+
+#### `isMinLength`
+
+Validates that a field is at least a given number of characters long.
+
+```js
+someField: {
+    isMinLength: {
+        message: 'You need at least four characters',
+        length: 4,
+    },
+},
+```
+
+#### `isMaxLength`
+
+Validates that a field is at most a given number of characters long.
+
+```js
+someField: {
+    isMaxLength: {
+        message: 'You can at most have four characters',
+        length: 4,
+    },
+},
+```
+
+#### `isExactLength`
+
+Validates that a field is exactly a given number of characters long.
+
+```js
+someField: {
+    isExactLength: {
+        message: 'Norwegian postal codes are four digits long',
+        length: 4,
     },
 },
 ```

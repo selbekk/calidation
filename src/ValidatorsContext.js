@@ -10,6 +10,9 @@ import {
     isNumber,
     isRegexMatch,
     isWhitelisted,
+    isMinLength,
+    isMaxLength,
+    isExactLength,
 } from 'calidators';
 
 const defaultValidators = {
@@ -22,6 +25,9 @@ const defaultValidators = {
     isNumber,
     isRegexMatch,
     isWhitelisted,
+    isMinLength,
+    isMaxLength,
+    isExactLength,
 };
 
 const { Provider, Consumer } = createContext({});
