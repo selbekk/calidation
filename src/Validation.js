@@ -37,12 +37,20 @@ class Validation extends Component {
         this.props.unregister(this.props.config);
     }
     render() {
-        const { errors, fields, submitted, children, config } = this.props;
+        const {
+            errors,
+            fields,
+            submitted,
+            children,
+            config,
+            setField,
+        } = this.props;
 
         const childrenArgs = {
             errors,
             fields: this.getFieldValues(),
             submitted,
+            setField,
         };
 
         return children(childrenArgs);
