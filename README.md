@@ -21,36 +21,32 @@ of all time about this.
 Let's say you have a form you want to validate. Remove that old school
 `<form />` tag and replace it with a fly af `<FormValidation />` component!
 
-### Configurate, don't playa hate
+### Step 1: Specify your fields
 
 First, you specify a config object that specifies the names of the fields you
-want to validate:
+want to validate, and the validators to apply to each field.
 
 ```js
-const config = {
-    username: {},
-    password: {},
-},
-```
-
-What about those empty objects? Those are for you to specify the validators in!
-
-```js
-const config = {
+const formConfig = {
     username: {
         isRequired: 'Username is required!',
     },
     password: {
         isRequired: 'Password is also required!',
         isMinLength: {
-            message: 'Password must be 8 characters or longer',
+            message: 'Password must at least be 8 characters long',
             length: 8,
         },
     },
 };
 ```
 
-Here, the key is the name of the validator, and the value is the error message.
+In this config, we validate two fields - `username` and `password`. These keys
+are matched with your `<input name />` property. Each matching object is a list
+of validators.
+
+Here, the key is the name of the validator, and the value is either the error
+message as a string, or an object with a simple validation configuration.
 You can add as many validators as you want, and they'll be run from top to
 bottom. For more about validators, go to the [validators](#validators) section!
 
@@ -362,6 +358,129 @@ See how I implemented those custom validators? It's a curried function that
 first receives a config object, then the value, and then returns either an
 error message or `null`. You might want to let them accept the empty string too,
 in case your field is not required.
+
+## API
+
+### `FormValidation`
+
+`import { FormValidation } from 'calidators';`
+
+When you have a simple form to validate.
+
+#### Props
+
+##### `children: func.isRequired`
+
+The `children` function is called with an object with the following props:
+
+```js
+{
+    errors: object, // object with the same keys as `fields`, but with error messages
+    fields: object, // object with the form field values, to make controlled components
+    setField: func, // callback accepting a diff object, updating fields like setState
+    submitted: bool, // flag showing whether the form has been submitted once or not
+}
+```
+
+The `setField` function is used whenever you want to update a field outside of
+a typical `change` event. Pass an object with the diff you want to apply (like
+React's `setState`), and it will update and reevaluate your form.
+
+##### `config: object.isRequired`
+
+The config object specifies what you want to validate, and which validators to
+apply to it.
+
+Each validator can accept an object with a `message` key or - in the case where
+you don't have to specify anything other than a validation message - just a
+string with the error message.
+
+##### `initialValues: object`
+
+The `initialValues` object lets you specify the initial values of the form
+fields. These values are available from the `fields` argument in the `children`
+function, which lets you control your form fields.
+
+##### `onSubmit: func`
+
+This callback is fired whenever the form is submitted. That can happen whenever
+somebody clicks the submit button, or hits `enter` in the form.
+
+The `onSubmit` function is called with an object with the following props:
+
+```js
+{
+    errors: object, // Object with all error messages, keyed per field
+    fields: object, // Object with all field inputs, keyed per field
+    isValid: bool, // Boolean indicating whether your form is valid or not
+}
+```
+
+### `Form`
+
+`import { Form } from 'calidators';`
+
+When you want to wrap a complex form (in conjunction )
+
+#### Props
+
+##### `onSubmit: func`
+
+This callback is fired whenever the form is submitted. That can happen whenever
+somebody clicks the submit button, or hits `enter` in the form.
+
+The `onSubmit` function is called with an object with the following props:
+
+```js
+{
+    errors: object, // Object with all error messages, keyed per field
+    fields: object, // Object with all field inputs, keyed per field
+    isValid: bool, // Boolean indicating whether your form is valid or not
+}
+```
+
+### `Validation`
+
+`import { Validation } from 'calidators';`
+
+When you want to wrap a sub-set of your form in validation logic (in conjunction
+with the `Form` tag)
+
+#### Props
+
+##### `config: object.isRequired`
+
+The config object specifies what you want to validate, and which validators to
+apply to it.
+
+Each validator can accept an object with a `message` key or - in the case where
+you don't have to specify anything other than a validation message - just a
+string with the error message.
+
+### `ValidatorsProvider`
+
+`import { ValidatorsProvider } from 'calidators';`
+
+When you want to provide your application with a few more validators. Wrap your
+app with this at the top level.
+
+#### Props
+
+##### `validators`
+
+An object with functions according to the
+[validators](https://github.com/selbekk/calidators) spec. TL;DR: A function that
+returns a function that returns a function that decides whether or not your
+input if fair. Relax - here's an example:
+
+```js
+const validators = {
+    isBadTaste = config => value => value === 'Justin Bieber',
+};
+<ValidatorsProvider validators={validators}>
+    {...}
+</ValidatorsProvider>
+```
 
 ## Want to contribute?
 

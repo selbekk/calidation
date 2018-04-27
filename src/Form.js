@@ -128,9 +128,9 @@ class Form extends Component {
         const formContext = {
             errors: this.state.errors,
             fields: this.state.fields,
-            submitted: this.state.submitted,
-            setField: this.setField,
             register: this.registerSubComponent,
+            setField: this.setField,
+            submitted: this.state.submitted,
             unregister: this.unregisterSubComponent,
         };
         return (
