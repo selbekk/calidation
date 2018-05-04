@@ -313,3 +313,97 @@ describe('passing in functions as validator configs', () => {
         );
     });
 });
+
+describe('validateIf config property', () => {
+    const validateIfConfig = {
+        username: {
+            isMinLength: ({ fields, errors }) => ({
+                message: `"${fields.username}" is not 5 characters long`,
+                length: 5,
+            }),
+        },
+        email: {
+            isRequired: {
+                validateIf: ({ fields, errors }) => fields.username.length > 5,
+                message: 'email is required for long usernames',
+            },
+        },
+    };
+
+    const validateIfWithBooleanConfig = {
+        ...validateIfConfig,
+        email: {
+            isRequired: ({ fields, errors }) => ({
+                validateIf: fields.username.length > 5,
+                message: 'email is required for long usernames',
+            }),
+        },
+    };
+
+    it('runs validator if it returns true', () => {
+        const { queryByTestId, getByLabelText } = render(
+            <FormValidation config={validateIfConfig}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'borkybork' },
+        });
+
+        expect(queryByTestId('email-error')).not.toBeNull();
+        expect(queryByTestId('email-error').textContent).toBe(
+            'email is required for long usernames',
+        );
+    });
+
+    it('skips validator if it returns false', () => {
+        const { queryByTestId, getByLabelText } = render(
+            <FormValidation config={validateIfConfig}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'bork' },
+        });
+
+        expect(queryByTestId('username-error')).not.toBeNull();
+        expect(queryByTestId('username-error').textContent).toBe(
+            '"bork" is not 5 characters long',
+        );
+
+        expect(queryByTestId('email-error')).toBeNull();
+    });
+
+    it('runs validator if it is true', () => {
+        const { queryByTestId, getByLabelText } = render(
+            <FormValidation config={validateIfWithBooleanConfig}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'borkybork' },
+        });
+
+        expect(queryByTestId('email-error')).not.toBeNull();
+        expect(queryByTestId('email-error').textContent).toBe(
+            'email is required for long usernames',
+        );
+    });
+
+    it('skips validator if it is false', () => {
+        const { queryByTestId, getByLabelText } = render(
+            <FormValidation config={validateIfWithBooleanConfig}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'bork' },
+        });
+
+        expect(queryByTestId('email-error')).toBeNull();
+    });
+});

@@ -176,7 +176,7 @@ function. It will receive the other validated fields as an argument.
 someField: {
     isRequired: {
         message: 'You need to answer this question',
-        validateIf: fields => fields.someOtherField === 'foo',
+        validateIf: ({ errors, fields }) => fields.someOtherField === 'foo',
     },
 },
 ```
@@ -193,6 +193,7 @@ repeatPassword: {
     isEqual: ({ fields }) => {
         message: 'The two password must match',
         value: fields.password,
+        validateIf: fields.password.length > 0, // this can be a boolean too!
     },
 }
 ```

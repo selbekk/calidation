@@ -77,17 +77,6 @@ class Form extends Component {
             (error, [validatorName, validatorConfig]) => {
                 if (error) return error;
 
-                if (typeof validatorConfig === 'function') {
-                    validatorConfig = validatorConfig({
-                        fields: allFields,
-                        errors: { ...this.state.errors, allErrors },
-                    });
-                }
-
-                if (typeof validatorConfig === 'string') {
-                    validatorConfig = { message: validatorConfig };
-                }
-
                 const validator = this.props.validators[validatorName];
                 invariant(
                     validator,
@@ -95,6 +84,31 @@ class Form extends Component {
                         `specified ${validatorName}. Available validators: \n\n` +
                         Object.keys(this.props.validators).join(',\n'),
                 );
+
+                const context = {
+                    fields: allFields,
+                    errors: { ...this.state.errors, ...allErrors },
+                };
+
+                if (typeof validatorConfig === 'function') {
+                    validatorConfig = validatorConfig(context);
+                }
+
+                if (typeof validatorConfig === 'string') {
+                    validatorConfig = { message: validatorConfig };
+                }
+
+                if (
+                    typeof validatorConfig.validateIf === 'function' &&
+                    !validatorConfig.validateIf(context)
+                ) {
+                    return null;
+                } else if (
+                    typeof validatorConfig.validateIf === 'boolean' &&
+                    !validatorConfig.validateIf
+                ) {
+                    return null;
+                }
 
                 return validator(validatorConfig)(allFields[name]);
             },
