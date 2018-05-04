@@ -181,6 +181,22 @@ someField: {
 },
 ```
 
+If you want to do cross validation, or just need access to the other field inputs and / or errors, each validator also
+accepts a function that receives all fields and the current error state.
+
+```js
+password: {
+    isRequired: 'You need a password',
+},
+repeatPassword: {
+    isRequired: 'Please fill out the password a second time',
+    isEqual: ({ fields }) => {
+        message: 'The two password must match',
+        value: fields.password,
+    },
+}
+```
+
 Finally, please note that validation happens from top to bottom. The validation
 will quit once it encounters an error, so you can have multiple levels of
 validators if you so please.

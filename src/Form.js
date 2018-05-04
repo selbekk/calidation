@@ -60,17 +60,29 @@ class Form extends Component {
 
     validate = (fields, config) =>
         Object.entries(config).reduce(
-            (all, [name, fieldConfig]) => ({
-                ...all,
-                [name]: this.validateField(fieldConfig, name, fields),
+            (allErrors, [name, fieldConfig]) => ({
+                ...allErrors,
+                [name]: this.validateField(
+                    fieldConfig,
+                    name,
+                    fields,
+                    allErrors,
+                ),
             }),
             {},
         );
 
-    validateField = (fieldValidators, name, allFields) =>
+    validateField = (fieldValidators, name, allFields, allErrors) =>
         Object.entries(fieldValidators).reduce(
             (error, [validatorName, validatorConfig]) => {
                 if (error) return error;
+
+                if (typeof validatorConfig === 'function') {
+                    validatorConfig = validatorConfig({
+                        fields: allFields,
+                        errors: { ...this.state.errors, allErrors },
+                    });
+                }
 
                 if (typeof validatorConfig === 'string') {
                     validatorConfig = { message: validatorConfig };

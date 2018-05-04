@@ -271,3 +271,45 @@ describe('<Form> and <Validation /> side by side', () => {
         );
     });
 });
+
+describe('passing in functions as validator configs', () => {
+    it('receives errors and fields', () => {
+        const functionalConfig = {
+            username: {
+                isMinLength: ({ fields, errors }) => ({
+                    message: `"${fields.username}" is not 5 characters long`,
+                    length: 5,
+                }),
+            },
+            email: {
+                isEqual: ({ fields, errors }) => ({
+                    message: `The email must equal the username`,
+                    value: fields.username,
+                }),
+            },
+        };
+
+        const { getByTestId, getByLabelText } = render(
+            <FormValidation config={functionalConfig}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        Simulate.change(getByLabelText('username'), {
+            target: { name: 'username', value: 'bork' },
+        });
+        Simulate.change(getByLabelText('email'), {
+            target: { name: 'email', value: 'not the username' },
+        });
+
+        expect(getByTestId('username-error')).not.toBeNull();
+        expect(getByTestId('username-error').textContent).toBe(
+            '"bork" is not 5 characters long',
+        );
+
+        expect(getByTestId('email-error')).not.toBeNull();
+        expect(getByTestId('email-error').textContent).toBe(
+            'The email must equal the username',
+        );
+    });
+});
