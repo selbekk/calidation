@@ -33,9 +33,10 @@ class Form extends Component {
     };
 
     onChange = e => {
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         const fields = {
             ...this.state.fields,
-            [e.target.name]: e.target.value,
+            [e.target.name]: value,
         };
         const errors = this.validate(fields, this.state.config);
         this.setState({ errors, fields });
