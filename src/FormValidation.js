@@ -5,10 +5,10 @@ import Form from './Form';
 import Validation from './Validation';
 
 const FormValidation = props => {
-    const { children, config, initialValues, onSubmit } = props;
+    const { children, config, initialValues, onSubmit, ...rest } = props;
 
     return (
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit} {...rest}>
             <Validation config={config} initialValues={initialValues}>
                 {children}
             </Validation>

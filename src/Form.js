@@ -33,7 +33,8 @@ class Form extends Component {
     };
 
     onChange = e => {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        const value =
+            e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         const fields = {
             ...this.state.fields,
             [e.target.name]: value,
@@ -151,7 +152,7 @@ class Form extends Component {
     };
 
     render() {
-        const { children } = this.props;
+        const { children, ...rest } = this.props;
         const formContext = {
             errors: this.state.errors,
             fields: this.state.fields,
@@ -161,7 +162,7 @@ class Form extends Component {
             unregister: this.unregisterSubComponent,
         };
         return (
-            <form onChange={this.onChange} onSubmit={this.onSubmit}>
+            <form onChange={this.onChange} onSubmit={this.onSubmit} {...rest}>
                 <FormProvider value={formContext}>{children}</FormProvider>
             </form>
         );
