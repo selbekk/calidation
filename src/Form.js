@@ -152,7 +152,7 @@ class Form extends Component {
     };
 
     render() {
-        const { children, ...rest } = this.props;
+        const { children, onSubmit, ...rest } = this.props;
         const formContext = {
             errors: this.state.errors,
             fields: this.state.fields,
