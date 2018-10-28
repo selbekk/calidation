@@ -33,11 +33,14 @@ class Form extends Component {
     };
 
     onChange = e => {
-        if (!this.state.config[e.target.name]) {
-            return;
-        }
         const value =
-            e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+            e.target.type === 'file'
+                ? e.target.files.length <= 1
+                    ? e.target.files[0]
+                    : e.target.files
+                : e.target.type === 'checkbox'
+                    ? e.target.checked
+                    : e.target.value;
 
         const fields = {
             ...this.state.fields,
