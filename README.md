@@ -190,11 +190,11 @@ password: {
 },
 repeatPassword: {
     isRequired: 'Please fill out the password a second time',
-    isEqual: ({ fields }) => {
+    isEqual: ({ fields }) => ({
         message: 'The two password must match',
         value: fields.password,
         validateIf: fields.password.length > 0, // this can be a boolean too!
-    },
+    }),
 }
 ```
 
