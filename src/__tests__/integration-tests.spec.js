@@ -407,3 +407,24 @@ describe('validateIf config property', () => {
         expect(queryByTestId('email-error')).toBeNull();
     });
 });
+
+describe('resetting', () => {
+    it('resets the submitted flag, and all fields and errors', () => {
+        const { container, queryByTestId } = render(
+            <FormValidation config={exampleConfig}>
+                {props => (
+                    <React.Fragment>
+                        <ExampleForm {...props} />
+                        <button data-testid="reset" onClick={props.resetAll}>
+                            Reset
+                        </button>
+                    </React.Fragment>
+                )}
+            </FormValidation>,
+        );
+        Simulate.submit(container.querySelector('form'));
+        expect(queryByTestId('email-error')).not.toBeNull();
+        Simulate.click(queryByTestId('reset'));
+        expect(queryByTestId('email-error')).toBeNull();
+    });
+});

@@ -395,8 +395,9 @@ The `children` function is called with an object with the following props:
     errors: object, // object with the same keys as `fields`, but with error messages
     fields: object, // object with the form field values, to make controlled components
     setField: func, // callback accepting a diff object, updating fields like setState
-    submitted: bool, // flag showing whether the form has been submitted once or not
     submit: func, // call this to programmatically trigger a submitted state
+    submitted: bool, // flag showing whether the form has been submitted once or not
+    resetAll: func, // call this to programmatically trigger a full state reset
 }
 ```
 
@@ -445,7 +446,8 @@ When you want to wrap a complex form (in conjunction )
 ##### `onSubmit: func`
 
 This callback is fired whenever the form is submitted. That can happen whenever
-somebody clicks the submit button, or hits `enter` in the form.
+somebody clicks the submit button, hits `enter` in the form, or calls the `submit` function passed in the `children`
+function.
 
 The `onSubmit` function is called with an object with the following props:
 
@@ -456,6 +458,13 @@ The `onSubmit` function is called with an object with the following props:
     isValid: bool, // Boolean indicating whether your form is valid or not
 }
 ```
+
+##### `onReset: func`
+
+This callback is fired whenever the form is reset. That can happen whenever somebody clicks a button with type "reset",
+or calls the `resetAll` function passed in the `children` function.
+
+The `onReset` function is called with no parameters.
 
 ### `Validation`
 
