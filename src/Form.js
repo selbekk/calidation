@@ -18,10 +18,12 @@ const removeFrom = original => fieldsToRemove =>
 class Form extends Component {
     static defaultProps = {
         onSubmit: f => f,
+        onReset: f => f,
     };
 
     static propTypes = {
         onSubmit: func,
+        onReset: func,
         validators: shape({}).isRequired,
     };
 
@@ -47,8 +49,30 @@ class Form extends Component {
         this.setState({ errors, fields });
     };
 
+    onReset = e => {
+        if (e) {
+            e.preventDefault();
+        }
+
+        this.setState(prevState => ({
+            submitted: false,
+            errors: Object.keys(prevState.errors).reduce((acc, field) => ({
+                ...acc,
+                [field]: null,
+            })),
+            fields: Object.keys(prevState.fields).reduce((acc, field) => ({
+                ...acc,
+                [field]: '',
+            })),
+        }));
+
+        this.props.onReset();
+    };
+
     onSubmit = e => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         this.setState({ submitted: true });
         const { errors, fields } = this.state;
         this.props.onSubmit({
@@ -161,12 +185,19 @@ class Form extends Component {
             errors: this.state.errors,
             fields: this.state.fields,
             register: this.registerSubComponent,
+            resetAll: this.onReset,
             setField: this.setField,
+            submit: this.onSubmit,
             submitted: this.state.submitted,
             unregister: this.unregisterSubComponent,
         };
         return (
-            <form onChange={this.onChange} onSubmit={this.onSubmit} {...rest}>
+            <form
+                onChange={this.onChange}
+                onSubmit={this.onSubmit}
+                onReset={this.onReset}
+                {...rest}
+            >
                 <FormProvider value={formContext}>{children}</FormProvider>
             </form>
         );

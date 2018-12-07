@@ -14,7 +14,9 @@ class Validation extends Component {
         errors: shape({}),
         fields: shape({}),
         register: func,
+        resetAll: func,
         submitted: bool,
+        submit: func,
         unregister: func,
     };
 
@@ -42,6 +44,8 @@ class Validation extends Component {
         const {
             errors,
             fields,
+            resetAll,
+            submit,
             submitted,
             children,
             config,
@@ -51,6 +55,8 @@ class Validation extends Component {
         const childrenArgs = {
             errors,
             fields: this.getFields(fields),
+            resetAll,
+            submit,
             submitted,
             setField,
         };
