@@ -396,6 +396,7 @@ The `children` function is called with an object with the following props:
     fields: object, // object with the form field values, to make controlled components
     setField: func, // callback accepting a diff object, updating fields like setState
     submitted: bool, // flag showing whether the form has been submitted once or not
+    submit: func, // call this to programmatically trigger a submitted state
 }
 ```
 

@@ -42,6 +42,7 @@ class Validation extends Component {
         const {
             errors,
             fields,
+            submit,
             submitted,
             children,
             config,
@@ -51,6 +52,7 @@ class Validation extends Component {
         const childrenArgs = {
             errors,
             fields: this.getFields(fields),
+            submit,
             submitted,
             setField,
         };

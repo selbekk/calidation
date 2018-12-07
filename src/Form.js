@@ -48,7 +48,9 @@ class Form extends Component {
     };
 
     onSubmit = e => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         this.setState({ submitted: true });
         const { errors, fields } = this.state;
         this.props.onSubmit({
@@ -162,6 +164,7 @@ class Form extends Component {
             fields: this.state.fields,
             register: this.registerSubComponent,
             setField: this.setField,
+            submit: this.onSubmit,
             submitted: this.state.submitted,
             unregister: this.unregisterSubComponent,
         };
