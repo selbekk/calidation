@@ -113,6 +113,27 @@ describe('<FormValidation />', () => {
         expect(getByLabelText('username').value).toBe('test username');
         expect(queryByTestId('username-error')).toBeNull();
     });
+
+    it('validates initial values', () => {
+        const initialValues = { email: 'not an email' };
+        const { getByLabelText, queryByTestId } = render(
+            <FormValidation
+                config={exampleConfig}
+                initialValues={initialValues}
+            >
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        expect(getByLabelText('email').value).toBe('not an email');
+        expect(queryByTestId('email-error').textContent).toBe('email invalid');
+
+        Simulate.change(getByLabelText('email'), {
+            target: { name: 'email', value: '' },
+        });
+
+        expect(queryByTestId('email-error').textContent).toBe('email required');
+    });
 });
 
 describe('<ValidatorsProvider />', () => {
