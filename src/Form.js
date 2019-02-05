@@ -140,7 +140,7 @@ class Form extends Component {
                     return null;
                 }
 
-                return validator(validatorConfig, allFields)(allFields[name]);
+                return validator(validatorConfig, context)(allFields[name]);
             },
             null,
         );
