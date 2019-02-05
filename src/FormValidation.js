@@ -20,6 +20,7 @@ FormValidation.propTypes = {
     children: func.isRequired,
     config: shape({}).isRequired,
     initialValues: shape({}),
+    extendValidators: shape({}),
     onSubmit: func,
 };
 
