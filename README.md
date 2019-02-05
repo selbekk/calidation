@@ -400,6 +400,7 @@ The `children` function is called with an object with the following props:
     errors: object, // object with the same keys as `fields`, but with error messages
     fields: object, // object with the form field values, to make controlled components
     setField: func, // callback accepting a diff object, updating fields like setState
+    setErrors: func, // callback accepting a diff object, updating field errors like setState in case this is needed.
     submit: func, // call this to programmatically trigger a submitted state
     submitted: bool, // flag showing whether the form has been submitted once or not
     resetAll: func, // call this to programmatically trigger a full state reset
@@ -436,6 +437,7 @@ The `onSubmit` function is called with an object with the following props:
 {
     errors: object, // Object with all error messages, keyed per field
     fields: object, // Object with all field inputs, keyed per field
+    setErrors: func, // callback accepting a diff object, updating field errors like setState in case this is needed.
     isValid: bool, // Boolean indicating whether your form is valid or not
 }
 ```
