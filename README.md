@@ -361,9 +361,10 @@ validators. It can look like this:
 ```js
 import { ValidatorsProvider } from 'calidation';
 const extraValidators = {
-    isEven: config => value =>
+    isEven: (config, context) => value =>
         Number(value) % 2 !== 0 ? config.message : null,
-    isOdd: config => value => (Number(value) % 2 !== 1 ? config.message : null),
+    isOdd: (config, context) => value =>
+        Number(value) % 2 !== 1 ? config.message : null,
 };
 
 <ValidatorsProvider validators={extraValidators}>
@@ -371,9 +372,9 @@ const extraValidators = {
 </ValidatorsProvider>;
 ```
 
-See how I implemented those custom validators? It's a curried function that
-first receives a config object, then the value, and then returns either an
-error message or `null`. You might want to let them accept the empty string too,
+See how I implemented those custom validators? It's a nested function, the first function
+passes the `config` and `context` to the validator function, which passes in the `value` of the field being being validated by that validator. The validator then either returns an
+error message or `null`. You might want to let them accept a `value` of empty string or null too,
 in case your field is not required.
 
 ## API
