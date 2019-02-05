@@ -374,7 +374,11 @@ const extraValidators = {
 
 See how I implemented those custom validators? It's a nested function, the first function
 passes the `config` and `context` to the validator function, which passes in the `value` of the field being being validated by that validator. The validator then either returns an
-error message or `null`. You might want to let them accept a `value` of empty string or null too,
+error message or `null`.
+
+The `context` contains `{fields, errors}` which are collections of all fields and all the errors so far.
+
+You might want to let them accept a `value` of empty string or null too,
 in case your field is not required.
 
 ## API
