@@ -19,20 +19,26 @@ class Form extends Component {
     static defaultProps = {
         onSubmit: f => f,
         onReset: f => f,
+        extendValidators: {},
     };
 
     static propTypes = {
         onSubmit: func,
         onReset: func,
         validators: shape({}).isRequired,
+        extendValidators: shape({}),
     };
 
-    state = {
-        config: {},
-        errors: {},
-        fields: {},
-        submitted: false,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            config: {},
+            errors: {},
+            fields: {},
+            submitted: false,
+            validators: { ...props.validators, ...this.props.extendValidators },
+        };
+    }
 
     onChange = e => {
         if (!this.state.config[e.target.name]) {
@@ -113,7 +119,7 @@ class Form extends Component {
             (error, [validatorName, validatorConfig]) => {
                 if (error) return error;
 
-                const validator = this.props.validators[validatorName];
+                const validator = this.state.validators[validatorName];
                 invariant(
                     validator,
                     "You specified a validator that doesn't exist. You " +
@@ -185,6 +191,15 @@ class Form extends Component {
         });
     };
 
+    /**
+     * Useful for setting just-in-time validators i.e in a form's render func.
+     */
+    setValidators = (jitValidators = {}) => {
+        this.setState({
+            validators: { ...this.state.validators, ...jitValidators },
+        });
+    };
+
     render() {
         const { children, onSubmit, ...rest } = this.props;
         const formContext = {
@@ -197,6 +212,7 @@ class Form extends Component {
             submit: this.onSubmit,
             submitted: this.state.submitted,
             unregister: this.unregisterSubComponent,
+            setValidators: this.setValidators,
         };
         return (
             <form

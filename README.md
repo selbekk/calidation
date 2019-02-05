@@ -403,13 +403,18 @@ The `children` function is called with an object with the following props:
     setErrors: func, // callback accepting a diff object, updating field errors like setState in case this is needed.
     submit: func, // call this to programmatically trigger a submitted state
     submitted: bool, // flag showing whether the form has been submitted once or not
-    resetAll: func, // call this to programmatically trigger a full state reset
+    resetAll: func, // call this to programmatically trigger a full state reset,
+    setValidators: func //can be used to set just-in-time validators, updates like setState
 }
 ```
 
 The `setField` function is used whenever you want to update a field outside of
-a typical `change` event. Pass an object with the diff you want to apply (like
+a typical `change` event. Pass an object with the diff you want to apply (like you would with
 React's `setState`), and it will update and reevaluate your form.
+
+`setErrors` works in a similar way, but for errors. i.e You want invalidate a field.
+
+`setValidators` can be used to add validators for this specific form/component
 
 ##### `config: object.isRequired`
 
@@ -426,6 +431,10 @@ The `initialValues` object lets you specify the initial values of the form
 fields. These values are available from the `fields` argument in the `children`
 function, which lets you control your form fields.
 
+##### `extendValidators: object`
+
+For Declarative inclusion of any extra validators you want to use in this form.
+
 ##### `onSubmit: func`
 
 This callback is fired whenever the form is submitted. That can happen whenever
@@ -437,7 +446,7 @@ The `onSubmit` function is called with an object with the following props:
 {
     errors: object, // Object with all error messages, keyed per field
     fields: object, // Object with all field inputs, keyed per field
-    setErrors: func, // callback accepting a diff object, updating field errors like setState in case this is needed.
+    setErrors: func, // callback accepting a diff object, updating field errors (like setState)
     isValid: bool, // Boolean indicating whether your form is valid or not
 }
 ```
