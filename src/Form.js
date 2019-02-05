@@ -79,6 +79,7 @@ class Form extends Component {
             errors,
             fields,
             isValid: Object.values(errors).every(error => error === null),
+            setErrors: this.setErrors,
         });
     };
 
@@ -86,6 +87,11 @@ class Form extends Component {
         const fields = { ...this.state.fields, ...diff };
         const errors = this.validate(fields, this.state.config);
         this.setState({ errors, fields });
+    };
+
+    setErrors = newErrors => {
+        const errors = { ...this.state.errors, ...newErrors };
+        this.setState({ errors });
     };
 
     validate = (fields, config) =>
@@ -187,6 +193,7 @@ class Form extends Component {
             register: this.registerSubComponent,
             resetAll: this.onReset,
             setField: this.setField,
+            setErrors: this.setErrors,
             submit: this.onSubmit,
             submitted: this.state.submitted,
             unregister: this.unregisterSubComponent,
