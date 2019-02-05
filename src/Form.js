@@ -38,6 +38,7 @@ class Form extends Component {
             submitted: false,
             validators: { ...props.validators, ...this.props.extendValidators },
         };
+        console.log('Form State: ', this.state);
     }
 
     onChange = e => {

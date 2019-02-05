@@ -18,6 +18,8 @@ class Validation extends Component {
         submitted: bool,
         submit: func,
         unregister: func,
+        setErrors: func,
+        setValidators: func,
     };
 
     getFields = source => {
@@ -50,6 +52,8 @@ class Validation extends Component {
             children,
             config,
             setField,
+            setErrors,
+            setValidators,
         } = this.props;
 
         const childrenArgs = {
@@ -59,6 +63,8 @@ class Validation extends Component {
             submit,
             submitted,
             setField,
+            setErrors,
+            setValidators,
         };
 
         return children(childrenArgs);
