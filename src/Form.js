@@ -14,6 +14,10 @@ const removeFrom = original => fieldsToRemove =>
             }),
             {},
         );
+const logicalValidators = {
+    validateIfFieldTrue: () => {},
+    validateIfFieldTrue: () => {},
+};
 
 class Form extends Component {
     static defaultProps = {
@@ -36,7 +40,11 @@ class Form extends Component {
             errors: {},
             fields: {},
             submitted: false,
-            validators: { ...props.validators, ...this.props.extendValidators },
+            validators: {
+                ...props.validators,
+                ...this.props.extendValidators,
+                ...logicalValidators,
+            },
         };
     }
 
