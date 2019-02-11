@@ -39,6 +39,12 @@ class Validation extends Component {
         const { register, initialValues, config } = this.props;
         register(config, this.getFields(initialValues));
     }
+
+    // componentWillReceiveProps(props) {
+    //     const { register, initialValues, config } = props;
+    //     register(config, this.getFields(initialValues));
+    // }
+
     componentWillUnmount() {
         this.props.unregister(this.props.config);
     }

@@ -114,48 +114,69 @@ class Form extends Component {
             {},
         );
 
-    validateField = (fieldValidators, name, allFields, allErrors) =>
-        Object.entries(fieldValidators).reduce(
-            (error, [validatorName, validatorConfig]) => {
-                if (error) return error;
+    validateField = (fieldValidators, name, allFields, allErrors) => {
+        //First determine if this field should even be validated
+        const entries = Object.entries(fieldValidators);
 
-                const validator = this.state.validators[validatorName];
-                invariant(
-                    validator,
-                    "You specified a validator that doesn't exist. You " +
-                        `specified ${validatorName}. Available validators: \n\n` +
-                        Object.keys(this.props.validators).join(',\n'),
-                );
+        for (let [key, val] of entries) {
+            if (key == 'validateIf' && typeof val === 'function' && !val()) {
+                // console.log('validateIf skipped', name)
+                return null;
+            }
 
-                const context = {
-                    fields: allFields,
-                    errors: { ...this.state.errors, ...allErrors },
-                };
+            if (key == 'validateIfFieldTrue' && !allFields[val]) {
+                // console.log('validateIfFieldTrue skipped', name)
+                return null;
+            }
 
-                if (typeof validatorConfig === 'function') {
-                    validatorConfig = validatorConfig(context);
-                }
+            if (key == 'validateIfFieldFalse' && allFields[val]) {
+                // console.log('validateIfFieldFalse skipped', name)
+                return null;
+            }
+        }
 
-                if (typeof validatorConfig === 'string') {
-                    validatorConfig = { message: validatorConfig };
-                }
+        //Now do validation run
+        return entries.reduce((error, [validatorName, validatorConfig]) => {
+            if (error) return error;
 
-                if (
-                    typeof validatorConfig.validateIf === 'function' &&
-                    !validatorConfig.validateIf(context)
-                ) {
-                    return null;
-                } else if (
-                    typeof validatorConfig.validateIf === 'boolean' &&
-                    !validatorConfig.validateIf
-                ) {
-                    return null;
-                }
+            const validator = this.state.validators[validatorName];
 
-                return validator(validatorConfig, context)(allFields[name]);
-            },
-            null,
-        );
+            invariant(
+                validator,
+                "You specified a validator that doesn't exist. You " +
+                    `specified ${validatorName}. Available validators: \n\n` +
+                    Object.keys(this.props.validators).join(',\n'),
+            );
+
+            const context = {
+                fields: allFields,
+                errors: { ...this.state.errors, ...allErrors },
+            };
+
+            if (typeof validatorConfig === 'function') {
+                validatorConfig = validatorConfig(context);
+            }
+
+            if (typeof validatorConfig === 'string') {
+                validatorConfig = { message: validatorConfig };
+            }
+
+            if (
+                typeof validatorConfig.validateIf === 'function' &&
+                !validatorConfig.validateIf(context)
+            ) {
+                console.log('validation Skipped', validatorConfig);
+                return null;
+            } else if (
+                typeof validatorConfig.validateIf === 'boolean' &&
+                !validatorConfig.validateIf
+            ) {
+                return null;
+            }
+
+            return validator(validatorConfig, context)(allFields[name]);
+        }, null);
+    };
 
     registerSubComponent = (subComponentConfig, initialValues) => {
         const config = { ...this.state.config, ...subComponentConfig };
@@ -201,7 +222,7 @@ class Form extends Component {
     };
 
     render() {
-        const { children, onSubmit, ...rest } = this.props;
+        const { children, onSubmit, extendValidators, ...rest } = this.props;
         const formContext = {
             errors: this.state.errors,
             fields: this.state.fields,

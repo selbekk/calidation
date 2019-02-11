@@ -198,6 +198,9 @@ repeatPassword: {
 }
 ```
 
+Also see:
+`validateIfFieldFalse: otherFieldName` and `validateIfFieldTrue: otherFieldName`
+
 Finally, please note that validation happens from top to bottom. The validation
 will quit once it encounters an error, so you can have multiple levels of
 validators if you so please.
