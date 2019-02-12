@@ -14,9 +14,10 @@ const removeFrom = original => fieldsToRemove =>
             }),
             {},
         );
+//Placeholders for logical validators
 const logicalValidators = {
-    validateIfFieldTrue: () => {},
-    validateIfFieldTrue: () => {},
+    validateIfFieldTrue: () => () => {},
+    validateIfFieldFalse: () => () => {},
 };
 
 class Form extends Component {
@@ -132,13 +133,19 @@ class Form extends Component {
                 return null;
             }
 
-            if (key == 'validateIfFieldTrue' && !allFields[val]) {
-                // console.log('validateIfFieldTrue skipped', name)
+            if (
+                key == 'validateIfFieldTrue' &&
+                (!allFields[val] === false || allFields[val] === 'false')
+            ) {
+                console.log('validateIfFieldTrue skipped', name);
                 return null;
             }
 
-            if (key == 'validateIfFieldFalse' && allFields[val]) {
-                // console.log('validateIfFieldFalse skipped', name)
+            if (
+                key == 'validateIfFieldFalse' &&
+                (allFields[val] === true || allFields[val] === 'true')
+            ) {
+                console.log('validateIfFieldFalse skipped', name);
                 return null;
             }
         }
@@ -153,7 +160,7 @@ class Form extends Component {
                 validator,
                 "You specified a validator that doesn't exist. You " +
                     `specified ${validatorName}. Available validators: \n\n` +
-                    Object.keys(this.props.validators).join(',\n'),
+                    Object.keys(this.state.validators).join(',\n'),
             );
 
             const context = {
