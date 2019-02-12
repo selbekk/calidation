@@ -93,7 +93,9 @@ class Form extends Component {
         this.props.onSubmit({
             errors,
             fields,
-            isValid: Object.values(errors).every(error => error === null),
+            isValid: Object.values(errors).every(
+                error => error === null || error === undefined,
+            ),
             setErrors: this.setErrors,
         });
     };
