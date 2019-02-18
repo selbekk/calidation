@@ -205,6 +205,11 @@ Finally, please note that validation happens from top to bottom. The validation
 will quit once it encounters an error, so you can have multiple levels of
 validators if you so please.
 
+### Auto Forcing values to be boolean
+
+This validation library automatically turns all string boolean values to actual booleans i.e 'true' => true when using the automatic onchang behavior i.e when not using your own onChange behavior on inputs.
+To disable this behavior, either use your own onchange behavior (+ setFields(...)) on your inputs OR set the prop `forceBoolean` prop on your Form to `false`.
+
 ### Default validators
 
 calidation comes with a lot of validators built in. These should be enough for

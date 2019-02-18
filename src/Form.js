@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func, shape } from 'prop-types';
+import { func, shape, bool } from 'prop-types';
 import invariant from 'invariant';
 import { withValidators } from './ValidatorsContext';
 import { FormProvider } from './FormContext';
@@ -25,6 +25,7 @@ class Form extends Component {
         onSubmit: f => f,
         onReset: f => f,
         extendValidators: {},
+        forceBoolean: true,
     };
 
     static propTypes = {
@@ -32,6 +33,7 @@ class Form extends Component {
         onReset: func,
         validators: shape({}).isRequired,
         extendValidators: shape({}),
+        forceBoolean: bool,
     };
 
     constructor(props) {
@@ -49,12 +51,21 @@ class Form extends Component {
         };
     }
 
+    /**
+     * Automatically applied to most input fields
+     */
     onChange = e => {
         if (!this.state.config[e.target.name]) {
             return;
         }
-        const value =
+        let value =
             e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+        //Fix issue with certain inputs where booleans are treated like strings
+        if (this.props.forceBoolean) {
+            if (value === 'true') value = true;
+            if (value === 'false') value = false;
+        }
 
         const fields = {
             ...this.state.fields,
@@ -101,6 +112,7 @@ class Form extends Component {
     };
 
     setField = diff => {
+        console.log('fields set', diff);
         const fields = { ...this.state.fields, ...diff };
         const errors = this.validate(fields, this.state.config);
         this.setState({ errors, fields });
@@ -125,6 +137,9 @@ class Form extends Component {
             {},
         );
 
+    /**
+     * Returning null means the field is valid
+     */
     validateField = (fieldValidators, name, allFields, allErrors) => {
         //First determine if this field should even be validated
         const entries = Object.entries(fieldValidators);
@@ -147,7 +162,11 @@ class Form extends Component {
                 key == 'validateIfFieldFalse' &&
                 (allFields[val] === true || allFields[val] === 'true')
             ) {
-                console.log('validateIfFieldFalse skipped', name);
+                console.log(
+                    'validateIfFieldFalse skipped',
+                    name,
+                    allFields[name],
+                );
                 return null;
             }
         }
@@ -239,7 +258,13 @@ class Form extends Component {
     };
 
     render() {
-        const { children, onSubmit, extendValidators, ...rest } = this.props;
+        const {
+            children,
+            onSubmit,
+            extendValidators,
+            forceBoolean,
+            ...rest
+        } = this.props;
         const formContext = {
             errors: this.state.errors,
             fields: this.state.fields,
