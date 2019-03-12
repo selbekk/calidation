@@ -85,6 +85,7 @@ class Form extends Component {
             errors,
             fields,
             isValid: Object.values(errors).every(error => error === null),
+            resetAll: this.onReset,
         });
     };
 
