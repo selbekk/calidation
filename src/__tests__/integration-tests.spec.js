@@ -149,12 +149,7 @@ describe('<ValidatorsProvider />', () => {
 
         const hoffValidator = config => value =>
             value !== 'the hoff' ? config.message : null;
-        const {
-            container,
-            getByLabelText,
-            getByTestId,
-            queryByTestId,
-        } = render(
+        const { getByLabelText, getByTestId, queryByTestId } = render(
             <ValidatorsProvider validators={{ isTheHoff: hoffValidator }}>
                 <FormValidation config={customConfig}>
                     {props => <ExampleForm {...props} />}

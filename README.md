@@ -361,9 +361,10 @@ validators. It can look like this:
 ```js
 import { ValidatorsProvider } from 'calidation';
 const extraValidators = {
-    isEven: config => value =>
+    isEven: (config, { fields, errors }) => value =>
         Number(value) % 2 !== 0 ? config.message : null,
-    isOdd: config => value => (Number(value) % 2 !== 1 ? config.message : null),
+    isOdd: (config, { fields, errors }) => value =>
+        Number(value) % 2 !== 1 ? config.message : null,
 };
 
 <ValidatorsProvider validators={extraValidators}>
