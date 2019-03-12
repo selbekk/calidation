@@ -96,6 +96,7 @@ describe('<FormValidation />', () => {
             errors: { username: 'username required', email: 'email required' },
             fields: { username: '', email: '' },
             isValid: false,
+            resetAll: expect.any(Function),
         });
     });
 
