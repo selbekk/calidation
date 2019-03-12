@@ -1,5 +1,10 @@
 import React, { Fragment } from 'react';
-import { render, Simulate } from 'react-testing-library';
+import {
+    render,
+    fireEvent,
+    waitForElement,
+    cleanup,
+} from 'react-testing-library';
 
 import { Form, Validation, FormValidation, ValidatorsProvider } from '..';
 
@@ -41,6 +46,8 @@ const exampleConfig = {
     },
 };
 
+afterEach(cleanup);
+
 describe('<FormValidation />', () => {
     it('runs validation on mount', () => {
         const { getByTestId } = render(
@@ -70,10 +77,10 @@ describe('<FormValidation />', () => {
         );
         expect(getByTestId('email-error').textContent).toBe('email required');
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'my username' },
         });
-        Simulate.change(getByLabelText('email'), {
+        fireEvent.change(getByLabelText(/email/i), {
             target: { name: 'email', value: 'an invalid email' },
         });
 
@@ -83,13 +90,13 @@ describe('<FormValidation />', () => {
 
     it('calls the onSubmit prop with the correct params', () => {
         const submitSpy = jest.fn();
-        const { container, getByTestId } = render(
+        const { container } = render(
             <FormValidation config={exampleConfig} onSubmit={submitSpy}>
                 {props => <ExampleForm {...props} />}
             </FormValidation>,
         );
 
-        Simulate.submit(container.querySelector('form'));
+        fireEvent.submit(container.querySelector('form'));
 
         expect(submitSpy).toHaveBeenCalledTimes(1);
         expect(submitSpy).toHaveBeenCalledWith({
@@ -97,12 +104,13 @@ describe('<FormValidation />', () => {
             fields: { username: '', email: '' },
             isValid: false,
             resetAll: expect.any(Function),
+            setError: expect.any(Function),
         });
     });
 
     it('lets you provide initial values', () => {
-        const initialValues = { username: 'test username' };
-        const { container, getByLabelText, queryByTestId } = render(
+        const initialValues = { username: 'initial username' };
+        const { getByLabelText, queryByTestId } = render(
             <FormValidation
                 config={exampleConfig}
                 initialValues={initialValues}
@@ -111,7 +119,7 @@ describe('<FormValidation />', () => {
             </FormValidation>,
         );
 
-        expect(getByLabelText('username').value).toBe('test username');
+        expect(getByLabelText(/username/i).value).toBe('initial username');
         expect(queryByTestId('username-error')).toBeNull();
     });
 
@@ -126,10 +134,10 @@ describe('<FormValidation />', () => {
             </FormValidation>,
         );
 
-        expect(getByLabelText('email').value).toBe('not an email');
+        expect(getByLabelText(/email/i).value).toBe('not an email');
         expect(queryByTestId('email-error').textContent).toBe('email invalid');
 
-        Simulate.change(getByLabelText('email'), {
+        fireEvent.change(getByLabelText(/email/i), {
             target: { name: 'email', value: '' },
         });
 
@@ -161,7 +169,7 @@ describe('<ValidatorsProvider />', () => {
             'username required',
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'the boss' },
         });
 
@@ -169,7 +177,7 @@ describe('<ValidatorsProvider />', () => {
             'must be the Hoff',
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'the hoff' },
         });
 
@@ -252,13 +260,13 @@ describe('<Form> and <Validation /> side by side', () => {
             <CompoundExampleForm onSubmit={spy} showAnother={true} />,
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'selbekk' },
         });
-        Simulate.change(getByLabelText('color'), {
+        fireEvent.change(getByLabelText(/color/i), {
             target: { name: 'color', value: 'red' },
         });
-        Simulate.submit(container.querySelector('form'));
+        fireEvent.submit(container.querySelector('form'));
 
         expect(spy).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -276,7 +284,7 @@ describe('<Form> and <Validation /> side by side', () => {
             container,
         });
 
-        Simulate.submit(container.querySelector('form'));
+        fireEvent.submit(container.querySelector('form'));
 
         expect(spy).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -312,10 +320,10 @@ describe('passing in functions as validator configs', () => {
             </FormValidation>,
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'bork' },
         });
-        Simulate.change(getByLabelText('email'), {
+        fireEvent.change(getByLabelText(/email/i), {
             target: { name: 'email', value: 'not the username' },
         });
 
@@ -334,14 +342,14 @@ describe('passing in functions as validator configs', () => {
 describe('validateIf config property', () => {
     const validateIfConfig = {
         username: {
-            isMinLength: ({ fields, errors }) => ({
+            isMinLength: ({ fields }) => ({
                 message: `"${fields.username}" is not 5 characters long`,
                 length: 5,
             }),
         },
         email: {
             isRequired: {
-                validateIf: ({ fields, errors }) => fields.username.length > 5,
+                validateIf: ({ fields }) => fields.username.length > 5,
                 message: 'email is required for long usernames',
             },
         },
@@ -350,7 +358,7 @@ describe('validateIf config property', () => {
     const validateIfWithBooleanConfig = {
         ...validateIfConfig,
         email: {
-            isRequired: ({ fields, errors }) => ({
+            isRequired: ({ fields }) => ({
                 validateIf: fields.username.length > 5,
                 message: 'email is required for long usernames',
             }),
@@ -364,7 +372,7 @@ describe('validateIf config property', () => {
             </FormValidation>,
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'borkybork' },
         });
 
@@ -381,7 +389,7 @@ describe('validateIf config property', () => {
             </FormValidation>,
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'bork' },
         });
 
@@ -400,7 +408,7 @@ describe('validateIf config property', () => {
             </FormValidation>,
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'borkybork' },
         });
 
@@ -417,7 +425,7 @@ describe('validateIf config property', () => {
             </FormValidation>,
         );
 
-        Simulate.change(getByLabelText('username'), {
+        fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'bork' },
         });
 
@@ -439,9 +447,27 @@ describe('resetting', () => {
                 )}
             </FormValidation>,
         );
-        Simulate.submit(container.querySelector('form'));
+        fireEvent.submit(container.querySelector('form'));
         expect(queryByTestId('email-error')).not.toBeNull();
-        Simulate.click(queryByTestId('reset'));
+        fireEvent.click(queryByTestId('reset'));
         expect(queryByTestId('email-error')).toBeNull();
+    });
+});
+
+describe('setting errors', () => {
+    it('sets the error programmatically from onSubmit', async () => {
+        const handleSubmit = ({ setError }) => {
+            setError({ email: "i don't like your email" });
+        };
+        const { container, getByTestId } = render(
+            <FormValidation config={exampleConfig} onSubmit={handleSubmit}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+        fireEvent.submit(container.querySelector('form'));
+
+        expect(getByTestId('email-error').textContent).toBe(
+            "i don't like your email",
+        );
     });
 });
