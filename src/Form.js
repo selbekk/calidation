@@ -56,14 +56,20 @@ class Form extends Component {
 
         this.setState(prevState => ({
             submitted: false,
-            errors: Object.keys(prevState.errors).reduce((acc, field) => ({
-                ...acc,
-                [field]: null,
-            })),
-            fields: Object.keys(prevState.fields).reduce((acc, field) => ({
-                ...acc,
-                [field]: '',
-            })),
+            errors: Object.keys(prevState.errors).reduce(
+                (acc, field) => ({
+                    ...acc,
+                    [field]: null,
+                }),
+                null,
+            ),
+            fields: Object.keys(prevState.fields).reduce(
+                (acc, field) => ({
+                    ...acc,
+                    [field]: '',
+                }),
+                null,
+            ),
         }));
 
         this.props.onReset();
