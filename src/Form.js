@@ -86,6 +86,7 @@ class Form extends Component {
             fields,
             isValid: Object.values(errors).every(error => error === null),
             resetAll: this.onReset,
+            setError: this.setError,
         });
     };
 
@@ -93,6 +94,11 @@ class Form extends Component {
         const fields = { ...this.state.fields, ...diff };
         const errors = this.validate(fields, this.state.config);
         this.setState({ errors, fields });
+    };
+
+    setError = diff => {
+        const errors = { ...this.state.errors, ...diff };
+        this.setState({ errors });
     };
 
     validate = (fields, config) =>
