@@ -66,6 +66,8 @@ export const withValidators = TargetComponent => {
         </Consumer>
     );
     const targetName = TargetComponent.displayName || TargetComponent.name;
+
     WithValidators.displayName = `withValidators(${targetName})`;
+
     return WithValidators;
 };

@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { bool, func, shape } from 'prop-types';
 import { withFormContext } from './FormContext';
+import { getFirstDefinedValue } from './utilities';
+
+const propTypes = {
+    children: func.isRequired,
+    config: shape({}).isRequired,
+    initialValues: shape({}),
+};
 
 class Validation extends Component {
     static defaultProps = {
@@ -10,20 +17,23 @@ class Validation extends Component {
     };
 
     static propTypes = {
-        config: shape({}).isRequired,
+        // OwnProps
+        ...propTypes,
+        // FormContext
         errors: shape({}),
         fields: shape({}),
-        register: func,
-        resetAll: func,
+        register: func.isRequired,
+        resetAll: func.isRequired,
+        setError: func.isRequired,
+        setField: func.isRequired,
+        submit: func.isRequired,
         submitted: bool,
-        submit: func,
-        unregister: func,
+        unregister: func.isRequired,
     };
 
     getFields = source => {
         const { config } = this.props;
-        const getFirstDefinedValue = (...values) =>
-            values.find(value => value !== undefined);
+
         return Object.keys(config).reduce(
             (allFields, field) => ({
                 ...allFields,
@@ -35,34 +45,42 @@ class Validation extends Component {
 
     componentDidMount() {
         const { register, initialValues, config } = this.props;
+
         register(config, this.getFields(initialValues));
     }
+
     componentWillUnmount() {
         this.props.unregister(this.props.config);
     }
+
     render() {
         const {
+            children,
             errors,
             fields,
             resetAll,
+            setError,
+            setField,
             submit,
             submitted,
-            children,
-            config,
-            setField,
         } = this.props;
 
         const childrenArgs = {
             errors,
             fields: this.getFields(fields),
             resetAll,
+            setError,
+            setField,
             submit,
             submitted,
-            setField,
         };
 
         return children(childrenArgs);
     }
 }
 
-export default withFormContext(Validation);
+const ValidationWithFormContext = withFormContext(Validation);
+
+ValidationWithFormContext.propTypes = propTypes;
+
+export default ValidationWithFormContext;

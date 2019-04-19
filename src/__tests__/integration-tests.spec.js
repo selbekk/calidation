@@ -1,10 +1,5 @@
 import React, { Fragment } from 'react';
-import {
-    render,
-    fireEvent,
-    waitForElement,
-    cleanup,
-} from 'react-testing-library';
+import { render, fireEvent, cleanup } from 'react-testing-library';
 
 import { Form, Validation, FormValidation, ValidatorsProvider } from '..';
 
@@ -33,6 +28,19 @@ const ExampleForm = ({ fields, errors }) => (
                 <span data-testid="email-error">{errors.email}</span>
             )}
         </div>
+        <div>
+            <label>
+                Optional{' '}
+                <input
+                    name="optional"
+                    value={fields.optional}
+                    onChange={f => f}
+                />
+            </label>
+            {errors.optional && (
+                <span data-testid="optional-error">{errors.optional}</span>
+            )}
+        </div>
     </Fragment>
 );
 
@@ -43,6 +51,13 @@ const exampleConfig = {
     email: {
         isRequired: 'email required',
         isEmail: 'email invalid',
+    },
+    optional: {
+        isMinLength: {
+            length: 3,
+            message: 'optional invalid',
+            validateIf: ({ isDirty }) => isDirty,
+        },
     },
 };
 
@@ -76,6 +91,7 @@ describe('<FormValidation />', () => {
             'username required',
         );
         expect(getByTestId('email-error').textContent).toBe('email required');
+        expect(queryByTestId('optional-error')).toBeNull();
 
         fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'my username' },
@@ -83,9 +99,21 @@ describe('<FormValidation />', () => {
         fireEvent.change(getByLabelText(/email/i), {
             target: { name: 'email', value: 'an invalid email' },
         });
+        fireEvent.change(getByLabelText(/optional/i), {
+            target: { name: 'optional', value: 'hi' },
+        });
 
         expect(queryByTestId('username-error')).toBeNull();
         expect(getByTestId('email-error').textContent).toBe('email invalid');
+        expect(getByTestId('optional-error').textContent).toBe(
+            'optional invalid',
+        );
+
+        fireEvent.change(getByLabelText(/optional/i), {
+            target: { name: 'optional', value: 'foo' },
+        });
+
+        expect(queryByTestId('optional-error')).toBeNull();
     });
 
     it('calls the onSubmit prop with the correct params', () => {
@@ -100,8 +128,17 @@ describe('<FormValidation />', () => {
 
         expect(submitSpy).toHaveBeenCalledTimes(1);
         expect(submitSpy).toHaveBeenCalledWith({
-            errors: { username: 'username required', email: 'email required' },
-            fields: { username: '', email: '' },
+            dirty: {
+                username: false,
+                email: false,
+                optional: false,
+            },
+            errors: {
+                username: 'username required',
+                email: 'email required',
+                optional: null,
+            },
+            fields: { username: '', email: '', optional: '' },
             isValid: false,
             resetAll: expect.any(Function),
             setError: expect.any(Function),
@@ -142,6 +179,9 @@ describe('<FormValidation />', () => {
         });
 
         expect(queryByTestId('email-error').textContent).toBe('email required');
+
+        expect(getByLabelText(/optional/i).value).toBe('');
+        expect(queryByTestId('optional-error')).toBeNull();
     });
 });
 
@@ -291,6 +331,7 @@ describe('<Form> and <Validation /> side by side', () => {
                 fields: {
                     username: 'selbekk',
                     email: '',
+                    optional: '',
                 },
             }),
         );

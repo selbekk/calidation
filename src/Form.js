@@ -3,27 +3,25 @@ import { func, shape } from 'prop-types';
 import invariant from 'invariant';
 import { withValidators } from './ValidatorsContext';
 import { FormProvider } from './FormContext';
+import { getFirstDefinedValue, removeFrom } from './utilities';
 
-const removeFrom = original => fieldsToRemove =>
-    Object.entries(original)
-        .filter(([fieldName]) => !fieldsToRemove.includes(fieldName))
-        .reduce(
-            (all, [fieldName, fieldValue]) => ({
-                ...all,
-                [fieldName]: fieldValue,
-            }),
-            {},
-        );
+const propTypes = {
+    onChange: func,
+    onSubmit: func,
+    onReset: func,
+};
 
 class Form extends Component {
     static defaultProps = {
-        onSubmit: f => f,
-        onReset: f => f,
+        onChange: e => {},
+        onSubmit: c => {},
+        onReset: () => {},
     };
 
     static propTypes = {
-        onSubmit: func,
-        onReset: func,
+        // OwnProps
+        ...propTypes,
+        // ValidatorsContext
         validators: shape({}).isRequired,
     };
 
@@ -34,19 +32,21 @@ class Form extends Component {
         submitted: false,
     };
 
+    initialValues = {};
+
     onChange = e => {
         if (!this.state.config[e.target.name]) {
             return;
         }
-        const value =
-            e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
-        const fields = {
-            ...this.state.fields,
-            [e.target.name]: value,
-        };
-        const errors = this.validate(fields, this.state.config);
-        this.setState({ errors, fields });
+        this.setField({
+            [e.target.name]:
+                e.target.type === 'checkbox'
+                    ? e.target.checked
+                    : e.target.value,
+        });
+
+        this.props.onChange(e);
     };
 
     onReset = e => {
@@ -54,23 +54,28 @@ class Form extends Component {
             e.preventDefault();
         }
 
-        this.setState(prevState => ({
-            submitted: false,
-            errors: Object.keys(prevState.errors).reduce(
-                (acc, field) => ({
-                    ...acc,
+        const { errors, fields } = this.state;
+
+        this.setState({
+            errors: Object.keys(errors).reduce(
+                (allErrors, field) => ({
+                    ...allErrors,
                     [field]: null,
                 }),
                 null,
             ),
-            fields: Object.keys(prevState.fields).reduce(
-                (acc, field) => ({
-                    ...acc,
-                    [field]: '',
+            fields: Object.keys(fields).reduce(
+                (allFields, field) => ({
+                    ...allFields,
+                    [field]: getFirstDefinedValue(
+                        this.initialValues[field],
+                        '',
+                    ),
                 }),
                 null,
             ),
-        }));
+            submitted: false,
+        });
 
         this.props.onReset();
     };
@@ -79,9 +84,19 @@ class Form extends Component {
         if (e) {
             e.preventDefault();
         }
-        this.setState({ submitted: true });
+
         const { errors, fields } = this.state;
+
+        this.setState({ submitted: true });
+
         this.props.onSubmit({
+            dirty: Object.keys(fields).reduce(
+                (obj, key) => ({
+                    ...obj,
+                    [key]: fields[key] !== this.initialValues[key],
+                }),
+                {},
+            ),
             errors,
             fields,
             isValid: Object.values(errors).every(error => error === null),
@@ -92,13 +107,22 @@ class Form extends Component {
 
     setField = diff => {
         const fields = { ...this.state.fields, ...diff };
-        const errors = this.validate(fields, this.state.config);
-        this.setState({ errors, fields });
+
+        this.setState({
+            errors: this.validate(fields, this.state.config),
+            fields,
+            submitted: false,
+        });
     };
 
     setError = diff => {
-        const errors = { ...this.state.errors, ...diff };
-        this.setState({ errors });
+        this.setState({
+            errors: {
+                ...this.state.errors,
+                ...diff,
+            },
+            submitted: false,
+        });
     };
 
     validate = (fields, config) =>
@@ -118,9 +142,12 @@ class Form extends Component {
     validateField = (fieldValidators, name, allFields, allErrors) =>
         Object.entries(fieldValidators).reduce(
             (error, [validatorName, validatorConfig]) => {
-                if (error) return error;
+                if (error) {
+                    return error;
+                }
 
                 const validator = this.props.validators[validatorName];
+
                 invariant(
                     validator,
                     "You specified a validator that doesn't exist. You " +
@@ -131,6 +158,7 @@ class Form extends Component {
                 const context = {
                     fields: allFields,
                     errors: { ...this.state.errors, ...allErrors },
+                    isDirty: allFields[name] !== this.initialValues[name],
                 };
 
                 if (typeof validatorConfig === 'function') {
@@ -142,13 +170,10 @@ class Form extends Component {
                 }
 
                 if (
-                    typeof validatorConfig.validateIf === 'function' &&
-                    !validatorConfig.validateIf(context)
-                ) {
-                    return null;
-                } else if (
-                    typeof validatorConfig.validateIf === 'boolean' &&
-                    !validatorConfig.validateIf
+                    (typeof validatorConfig.validateIf === 'function' &&
+                        !validatorConfig.validateIf(context)) ||
+                    (typeof validatorConfig.validateIf === 'boolean' &&
+                        !validatorConfig.validateIf)
                 ) {
                     return null;
                 }
@@ -159,57 +184,66 @@ class Form extends Component {
         );
 
     registerSubComponent = (subComponentConfig, initialValues) => {
-        const config = { ...this.state.config, ...subComponentConfig };
-        const fields = { ...this.state.fields, ...initialValues };
-        const errors = this.validate(fields, config);
+        this.initialValues = {
+            ...this.initialValues,
+            ...initialValues,
+        };
 
-        this.setState(prevState => ({
-            config: {
+        this.setState(prevState => {
+            const config = {
                 ...prevState.config,
-                ...config,
-            },
-            fields: {
+                ...subComponentConfig,
+            };
+            const fields = {
                 ...prevState.fields,
-                ...fields,
-            },
-            errors: {
-                ...prevState.errors,
-                ...errors,
-            },
-        }));
+                ...initialValues,
+            };
+
+            return {
+                config,
+                fields,
+                errors: this.validate(fields, config),
+            };
+        });
     };
 
     unregisterSubComponent = fieldsToRemove => {
         const keys = Object.keys(fieldsToRemove);
-        const fields = removeFrom(this.state.fields)(keys);
-        const config = removeFrom(this.state.config)(keys);
-        const errors = removeFrom(this.state.errors)(keys);
 
-        this.setState({
-            config,
-            errors: this.validate(fields, config),
-            fields,
+        this.initialValues = removeFrom(this.initialValues)(keys);
+
+        this.setState(prevState => {
+            const config = removeFrom(prevState.config)(keys);
+            const fields = removeFrom(prevState.fields)(keys);
+
+            return {
+                config,
+                errors: this.validate(fields, config),
+                fields,
+            };
         });
     };
 
     render() {
         const { children, onSubmit, ...rest } = this.props;
+        const { errors, fields, submitted } = this.state;
         const formContext = {
-            errors: this.state.errors,
-            fields: this.state.fields,
+            errors,
+            fields,
             register: this.registerSubComponent,
             resetAll: this.onReset,
+            setError: this.setError,
             setField: this.setField,
             submit: this.onSubmit,
-            submitted: this.state.submitted,
+            submitted,
             unregister: this.unregisterSubComponent,
         };
         return (
             <form
+                {...rest}
                 onChange={this.onChange}
                 onSubmit={this.onSubmit}
                 onReset={this.onReset}
-                {...rest}
             >
                 <FormProvider value={formContext}>{children}</FormProvider>
             </form>
@@ -217,4 +251,8 @@ class Form extends Component {
     }
 }
 
-export default withValidators(Form);
+const FormWithValidatorsContext = withValidators(Form);
+
+FormWithValidatorsContext.propTypes = propTypes;
+
+export default FormWithValidatorsContext;

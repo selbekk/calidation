@@ -1,14 +1,13 @@
 import React from 'react';
-import { func, shape } from 'prop-types';
 
 import Form from './Form';
 import Validation from './Validation';
 
 const FormValidation = props => {
-    const { children, config, initialValues, onSubmit, ...rest } = props;
+    const { children, config, initialValues, ...rest } = props;
 
     return (
-        <Form onSubmit={onSubmit} {...rest}>
+        <Form {...rest}>
             <Validation config={config} initialValues={initialValues}>
                 {children}
             </Validation>
@@ -17,10 +16,8 @@ const FormValidation = props => {
 };
 
 FormValidation.propTypes = {
-    children: func.isRequired,
-    config: shape({}).isRequired,
-    initialValues: shape({}),
-    onSubmit: func,
+    ...Form.propTypes,
+    ...Validation.propTypes,
 };
 
 export default FormValidation;
