@@ -35,6 +35,8 @@ class Form extends Component {
     initialValues = {};
 
     onChange = e => {
+        this.props.onChange(e);
+
         if (!this.state.config[e.target.name]) {
             return;
         }
@@ -45,8 +47,6 @@ class Form extends Component {
                     ? e.target.checked
                     : e.target.value,
         });
-
-        this.props.onChange(e);
     };
 
     onReset = e => {
