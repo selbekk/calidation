@@ -405,6 +405,7 @@ The `children` function is called with an object with the following props:
 
 ```js
 {
+    dirty: object, // Object with all fields isDirty state, keyed per field
     errors: object, // object with the same keys as `fields`, but with error messages
     fields: object, // object with the form field values, to make controlled components
     resetAll: func, // call this to programmatically trigger a full state reset
@@ -501,6 +502,7 @@ The `children` function is called with an object with the following props:
 
 ```js
 {
+    dirty: object, // Object with all fields isDirty state, keyed per field
     errors: object, // object with the same keys as `fields`, but with error messages
     fields: object, // object with the form field values, to make controlled components
     resetAll: func, // call this to programmatically trigger a full state reset

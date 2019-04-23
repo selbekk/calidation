@@ -3,7 +3,7 @@ import { func, shape } from 'prop-types';
 import invariant from 'invariant';
 import { withValidators } from './ValidatorsContext';
 import { FormProvider } from './FormContext';
-import { getFirstDefinedValue, removeFrom } from './utilities';
+import { areDirty, getFirstDefinedValue, removeFrom } from './utilities';
 
 const propTypes = {
     onChange: func,
@@ -90,13 +90,7 @@ class Form extends Component {
         this.setState({ submitted: true });
 
         this.props.onSubmit({
-            dirty: Object.keys(fields).reduce(
-                (obj, key) => ({
-                    ...obj,
-                    [key]: fields[key] !== this.initialValues[key],
-                }),
-                {},
-            ),
+            dirty: areDirty(this.initialValues, fields),
             errors,
             fields,
             isValid: Object.values(errors).every(error => error === null),
@@ -207,8 +201,8 @@ class Form extends Component {
         });
     };
 
-    unregisterSubComponent = fieldsToRemove => {
-        const keys = Object.keys(fieldsToRemove);
+    unregisterSubComponent = subComponentConfig => {
+        const keys = Object.keys(subComponentConfig);
 
         this.initialValues = removeFrom(this.initialValues)(keys);
 
@@ -228,6 +222,7 @@ class Form extends Component {
         const { children, onSubmit, ...rest } = this.props;
         const { errors, fields, submitted } = this.state;
         const formContext = {
+            dirty: areDirty(this.initialValues, fields),
             errors,
             fields,
             register: this.registerSubComponent,
@@ -238,6 +233,7 @@ class Form extends Component {
             submitted,
             unregister: this.unregisterSubComponent,
         };
+
         return (
             <form
                 {...rest}

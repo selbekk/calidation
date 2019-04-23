@@ -20,6 +20,7 @@ class Validation extends Component {
         // OwnProps
         ...propTypes,
         // FormContext
+        dirty: shape({}),
         errors: shape({}),
         fields: shape({}),
         register: func.isRequired,
@@ -31,31 +32,37 @@ class Validation extends Component {
         unregister: func.isRequired,
     };
 
-    getFields = source => {
-        const { config } = this.props;
-
-        return Object.keys(config).reduce(
-            (allFields, field) => ({
-                ...allFields,
-                [field]: getFirstDefinedValue(source[field], ''),
-            }),
-            {},
-        );
+    state = {
+        isRegistered: false,
     };
 
     componentDidMount() {
         const { register, initialValues, config } = this.props;
 
-        register(config, this.getFields(initialValues));
+        register(
+            config,
+            Object.keys(config).reduce(
+                (allFields, field) => ({
+                    ...allFields,
+                    [field]: getFirstDefinedValue(initialValues[field], ''),
+                }),
+                {},
+            ),
+        );
+
+        this.setState({ isRegistered: true });
     }
 
     componentWillUnmount() {
         this.props.unregister(this.props.config);
+
+        this.setState({ isRegistered: false });
     }
 
     render() {
         const {
             children,
+            dirty,
             errors,
             fields,
             resetAll,
@@ -64,10 +71,10 @@ class Validation extends Component {
             submit,
             submitted,
         } = this.props;
-
-        const childrenArgs = {
+        const validationContext = {
+            dirty,
             errors,
-            fields: this.getFields(fields),
+            fields,
             resetAll,
             setError,
             setField,
@@ -75,7 +82,7 @@ class Validation extends Component {
             submitted,
         };
 
-        return children(childrenArgs);
+        return this.state.isRegistered ? children(validationContext) : null;
     }
 }
 
