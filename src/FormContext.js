@@ -1,4 +1,4 @@
-import React, { Component, createContext } from 'react';
+import React, { createContext } from 'react';
 
 const { Consumer, Provider } = createContext({});
 
@@ -12,6 +12,8 @@ export const withFormContext = TargetComponent => {
         </Consumer>
     );
     const targetName = TargetComponent.displayName || TargetComponent.name;
+
     WithFormContext.displayName = `withFormContext(${targetName})`;
+
     return WithFormContext;
 };

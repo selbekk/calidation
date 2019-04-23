@@ -60,7 +60,7 @@ import { FormValidation } from 'calidation';
 const config = {...}; // See above
 const MyForm = props => (
     <FormValidation onSubmit={props.onSubmit} config={config}>
-        {({ fields, errors, submitted }) => (
+        {({ errors, fields, submitted }) => (
             <>
                 <label>
                     Username: <input name="username" value={fields.username} />
@@ -85,7 +85,7 @@ user experience out of the box! You can pass an `onSubmit` event handler, which
 will be called with the field values and errors:
 
 ```js
-onSubmit = ({ errors, fields, isValid }) => {
+onSubmit = ({ fields, isValid }) => {
     if (isValid) {
         server.saveAllTheData(fields);
     }
@@ -118,7 +118,7 @@ import { Form, Validation } from 'calidation';
 const MyPage = props => (
     <Form onSubmit={props.onSubmit}>
         <Validation config={props.config}>
-            {({ fields, errors }) => (
+            {({ fields }) => (
                 <>
                     Who is your daddy?
                     <input name="daddy" value={fields.daddy} />
@@ -127,7 +127,7 @@ const MyPage = props => (
         </Validation>
         {/* ...tons of other components and other stuff */}
         <Validation config={props.anotherConfig}>
-            {({ fields, errors }) => (
+            {({ fields }) => (
                 <>
                     What does he do?
                     <input name="dadWork" value={fields.dadWork} />
@@ -169,14 +169,26 @@ someField: {
 },
 ```
 
-You can skip validation of a certain validation if you specify a `validateIf`
+You can skip validation of a certain validator if you specify a `validateIf`
 function. It will receive the other validated fields as an argument.
 
 ```js
 someField: {
     isRequired: {
         message: 'You need to answer this question',
-        validateIf: ({ errors, fields }) => fields.someOtherField === 'foo',
+        validateIf: ({ fields }) => fields.someOtherField === 'foo',
+    },
+},
+```
+
+If you only want to display errors when the field has been edited, you can use the `isDirty` flag.
+
+```js
+someField: {
+    isMinLength: {
+        length: 5,
+        message: 'Must be minimum of 5 characters',
+        validateIf: ({ isDirty }) => isDirty,
     },
 },
 ```
@@ -361,9 +373,9 @@ validators. It can look like this:
 ```js
 import { ValidatorsProvider } from 'calidation';
 const extraValidators = {
-    isEven: (config, { fields, errors }) => value =>
+    isEven: (config, { errors, fields, isDirty }) => value =>
         Number(value) % 2 !== 0 ? config.message : null,
-    isOdd: (config, { fields, errors }) => value =>
+    isOdd: (config, { errors, fields, isDirty }) => value =>
         Number(value) % 2 !== 1 ? config.message : null,
 };
 
@@ -395,10 +407,11 @@ The `children` function is called with an object with the following props:
 {
     errors: object, // object with the same keys as `fields`, but with error messages
     fields: object, // object with the form field values, to make controlled components
+    resetAll: func, // call this to programmatically trigger a full state reset
+    setError: func, // callback accepting a diff object, updating errors like setState
     setField: func, // callback accepting a diff object, updating fields like setState
     submit: func, // call this to programmatically trigger a submitted state
     submitted: bool, // flag showing whether the form has been submitted once or not
-    resetAll: func, // call this to programmatically trigger a full state reset
 }
 ```
 
@@ -430,9 +443,12 @@ The `onSubmit` function is called with an object with the following props:
 
 ```js
 {
+    dirty: object, // Object with all fields isDirty state, keyed per field
     errors: object, // Object with all error messages, keyed per field
     fields: object, // Object with all field inputs, keyed per field
     isValid: bool, // Boolean indicating whether your form is valid or not
+    resetAll: func, // call this to programmatically trigger a full state reset
+    setError: func, // callback accepting a diff object, updating errors like setState
 }
 ```
 
@@ -454,9 +470,12 @@ The `onSubmit` function is called with an object with the following props:
 
 ```js
 {
+    dirty: object, // Object with all fields isDirty state, keyed per field
     errors: object, // Object with all error messages, keyed per field
     fields: object, // Object with all field inputs, keyed per field
     isValid: bool, // Boolean indicating whether your form is valid or not
+    resetAll: func, // call this to programmatically trigger a full state reset
+    setError: func, // callback accepting a diff object, updating errors like setState
 }
 ```
 
@@ -475,6 +494,22 @@ When you want to wrap a sub-set of your form in validation logic (in conjunction
 with the `Form` tag)
 
 #### Props
+
+##### `children: func.isRequired`
+
+The `children` function is called with an object with the following props:
+
+```js
+{
+    errors: object, // object with the same keys as `fields`, but with error messages
+    fields: object, // object with the form field values, to make controlled components
+    resetAll: func, // call this to programmatically trigger a full state reset
+    setError: func, // callback accepting a diff object, updating errors like setState
+    setField: func, // callback accepting a diff object, updating fields like setState
+    submit: func, // call this to programmatically trigger a submitted state
+    submitted: bool, // flag showing whether the form has been submitted once or not
+}
+```
 
 ##### `config: object.isRequired`
 
@@ -503,11 +538,22 @@ input if fair. Relax - here's an example:
 
 ```js
 const validators = {
-    isBadTaste = config => value => value === 'Justin Bieber',
+    isBadTaste = (config, context) => value => value === 'Justin Bieber',
 };
+
 <ValidatorsProvider validators={validators}>
     {...}
 </ValidatorsProvider>
+```
+
+The `context` is an object with the following props:
+
+```js
+{
+    errors: object, // object with the same keys as `fields`, but with error messages
+    fields: object, // object with the form field values, to make controlled components
+    isDirty: bool, // flag showing whether the current field has been modified
+}
 ```
 
 ## Want to contribute?
