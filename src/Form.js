@@ -33,19 +33,24 @@ class Form extends Component {
     };
 
     initialValues = {};
+    transforms = {};
 
     onChange = e => {
         this.props.onChange(e);
 
-        if (!this.state.config[e.target.name]) {
+        const { checked, name, type, value } = e.target;
+
+        if (!this.state.config[name]) {
             return;
         }
 
+        const transform =
+            typeof this.transforms[name] === 'function'
+                ? this.transforms[name]
+                : value => value;
+
         this.setField({
-            [e.target.name]:
-                e.target.type === 'checkbox'
-                    ? e.target.checked
-                    : e.target.value,
+            [name]: transform(type === 'checkbox' ? checked : value),
         });
     };
 
@@ -177,10 +182,18 @@ class Form extends Component {
             null,
         );
 
-    registerSubComponent = (subComponentConfig, initialValues) => {
+    registerSubComponent = (
+        subComponentConfig,
+        valueTransforms,
+        initialValues,
+    ) => {
         this.initialValues = {
             ...this.initialValues,
             ...initialValues,
+        };
+        this.transforms = {
+            ...this.transforms,
+            ...valueTransforms,
         };
 
         this.setState(prevState => {
@@ -205,6 +218,7 @@ class Form extends Component {
         const keys = Object.keys(subComponentConfig);
 
         this.initialValues = removeFrom(this.initialValues)(keys);
+        this.transforms = removeFrom(this.transforms)(keys);
 
         this.setState(prevState => {
             const config = removeFrom(prevState.config)(keys);

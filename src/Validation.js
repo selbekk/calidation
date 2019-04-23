@@ -7,6 +7,7 @@ const propTypes = {
     children: func.isRequired,
     config: shape({}).isRequired,
     initialValues: shape({}),
+    valueTransforms: shape({}),
 };
 
 class Validation extends Component {
@@ -14,6 +15,7 @@ class Validation extends Component {
         errors: {},
         fields: {},
         initialValues: {},
+        valueTransforms: {},
     };
 
     static propTypes = {
@@ -37,17 +39,24 @@ class Validation extends Component {
     };
 
     componentDidMount() {
-        const { register, initialValues, config } = this.props;
+        const { config, initialValues, register, valueTransforms } = this.props;
 
         register(
             config,
-            Object.keys(config).reduce(
-                (allFields, field) => ({
+            valueTransforms,
+            Object.keys(config).reduce((allFields, field) => {
+                const transform =
+                    typeof valueTransforms[field] === 'function'
+                        ? valueTransforms[field]
+                        : value => value;
+
+                return {
                     ...allFields,
-                    [field]: getFirstDefinedValue(initialValues[field], ''),
-                }),
-                {},
-            ),
+                    [field]: transform(
+                        getFirstDefinedValue(initialValues[field], ''),
+                    ),
+                };
+            }, {}),
         );
 
         this.setState({ isRegistered: true });

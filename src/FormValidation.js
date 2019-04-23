@@ -4,11 +4,15 @@ import Form from './Form';
 import Validation from './Validation';
 
 const FormValidation = props => {
-    const { children, config, initialValues, ...rest } = props;
+    const { children, config, initialValues, valueTransforms, ...rest } = props;
 
     return (
         <Form {...rest}>
-            <Validation config={config} initialValues={initialValues}>
+            <Validation
+                config={config}
+                initialValues={initialValues}
+                valueTransforms={valueTransforms}
+            >
                 {children}
             </Validation>
         </Form>

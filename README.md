@@ -435,6 +435,21 @@ The `initialValues` object lets you specify the initial values of the form
 fields. These values are available from the `fields` argument in the `children`
 function, which lets you control your form fields.
 
+##### `valueTransforms: object`
+
+The `valueTransforms` object lets you apply transforms to the value before it
+is stored and validated against. Each key should map to a field name and be a function
+that receives and returns a value. This is useful if you wish to convert a value's
+type or enforce casing.
+
+```js
+{
+    foo: (value) => parseInt(value),
+    bar: (value) => !!value ? 'YES' : 'NO',
+    etc: (value) => value.toLowerCase(),
+}
+```
+
 ##### `onSubmit: func`
 
 This callback is fired whenever the form is submitted. That can happen whenever
@@ -521,6 +536,25 @@ apply to it.
 Each validator can accept an object with a `message` key or - in the case where
 you don't have to specify anything other than a validation message - just a
 string with the error message.
+
+##### `initialValues: object`
+
+The `initialValues` object lets you specify the initial values of the form
+fields. These values are available from the `fields` argument in the `children`
+function, which lets you control your form fields.
+
+The `valueTransforms` object lets you apply transforms to the value before it
+is stored and validated against. Each key should map to a field name and be a function
+that receives and returns a value. This is useful if you wish to convert a value's
+type or enforce casing.
+
+```js
+{
+    foo: (value) => parseInt(value),
+    bar: (value) => !!value ? 'YES' : 'NO',
+    etc: (value) => value.toLowerCase(),
+}
+```
 
 ### `ValidatorsProvider`
 
