@@ -1,7 +1,39 @@
-import { getFirstDefinedValue, removeFrom } from '../utilities';
+import { areDirty, getFirstDefinedValue, removeFrom, uuid } from '../utilities';
 
 const foo = 'foo';
 const bar = 'bar';
+const original = {
+    foo,
+    bar,
+};
+
+describe('areDirty', () => {
+    it('should compare objects', () => {
+        expect(areDirty(original, {})).toEqual({
+            foo: true,
+            bar: true,
+        });
+        expect(areDirty(original, { foo, bar })).toEqual({
+            foo: false,
+            bar: false,
+        });
+        expect(areDirty(original, { foo, bar: 'BAR' })).toEqual({
+            foo: false,
+            bar: true,
+        });
+        expect(areDirty(original, { foo: null, bar: 'BAR' })).toEqual({
+            foo: true,
+            bar: true,
+        });
+        expect(
+            areDirty(original, { foo: null, bar: 'BAR', wux: false }),
+        ).toEqual({
+            foo: true,
+            bar: true,
+            wux: true,
+        });
+    });
+});
 
 describe('getFirstDefinedValue', () => {
     it('should find and return first defined value', () => {
@@ -12,20 +44,17 @@ describe('getFirstDefinedValue', () => {
 });
 
 describe('removeFrom', () => {
-    const original = {
-        foo,
-        bar,
-    };
+    it('should remove keys from object', () => {
+        expect(removeFrom(original)).toEqual(expect.any(Function));
 
-    expect(removeFrom(original)).toEqual(expect.any(Function));
+        const removeKeys = removeFrom(original);
 
-    const removeKeys = removeFrom(original);
-
-    expect(removeKeys([])).toEqual(original);
-    expect(removeKeys([foo])).toEqual({
-        bar,
+        expect(removeKeys([])).toEqual(original);
+        expect(removeKeys([foo])).toEqual({
+            bar,
+        });
+        expect(removeKeys([foo, bar])).toEqual({});
+        expect(removeKeys(['wux'])).toEqual(original);
+        expect(removeKeys([foo, bar, 'wux'])).toEqual({});
     });
-    expect(removeKeys([foo, bar])).toEqual({});
-    expect(removeKeys(['wux'])).toEqual(original);
-    expect(removeKeys([foo, bar, 'wux'])).toEqual({});
 });
