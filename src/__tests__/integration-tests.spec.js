@@ -183,6 +183,38 @@ describe('<FormValidation />', () => {
         expect(getByLabelText(/optional/i).value).toBe('');
         expect(queryByTestId('optional-error')).toBeNull();
     });
+
+    it('transforms values (initial & after change)', () => {
+        const initialValues = { username: 'foo', optional: '77' };
+        const { getByLabelText, queryByTestId } = render(
+            <FormValidation
+                config={exampleConfig}
+                initialValues={initialValues}
+                transforms={{
+                    username: value => value.toUpperCase(),
+                    optional: value => (parseInt(value) < 100 ? '0' : '1'),
+                }}
+            >
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        expect(getByLabelText(/username/i).value).toBe('FOO');
+
+        fireEvent.change(getByLabelText(/username/i), {
+            target: { name: 'username', value: 'bar' },
+        });
+
+        expect(getByLabelText(/username/i).value).toBe('BAR');
+
+        expect(getByLabelText(/optional/i).value).toBe('0');
+
+        fireEvent.change(getByLabelText(/optional/i), {
+            target: { name: 'optional', value: '109' },
+        });
+
+        expect(getByLabelText(/optional/i).value).toBe('1');
+    });
 });
 
 describe('<ValidatorsProvider />', () => {
