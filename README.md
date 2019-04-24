@@ -399,7 +399,7 @@ When you have a simple form to validate.
 
 #### Props
 
-Accepts all of the props from `Form` and `Validation below.
+Accepts all of the props from `Form` and `Validation` below.
 
 ### `Form`
 
