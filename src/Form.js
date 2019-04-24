@@ -44,14 +44,13 @@ class Form extends Component {
             return;
         }
 
-        const transform =
-            typeof this.transforms[name] === 'function'
-                ? this.transforms[name]
-                : value => value;
+        let val = type === 'checkbox' ? checked : value;
 
-        this.setField({
-            [name]: transform(type === 'checkbox' ? checked : value),
-        });
+        if (typeof this.transforms[name] === 'function') {
+            val = this.transforms[name](val);
+        }
+
+        this.setField({ [name]: val });
     };
 
     onReset = e => {
@@ -182,18 +181,14 @@ class Form extends Component {
             null,
         );
 
-    registerSubComponent = (
-        subComponentConfig,
-        valueTransforms,
-        initialValues,
-    ) => {
+    registerSubComponent = (subComponentConfig, transforms, initialValues) => {
         this.initialValues = {
             ...this.initialValues,
             ...initialValues,
         };
         this.transforms = {
             ...this.transforms,
-            ...valueTransforms,
+            ...transforms,
         };
 
         this.setState(prevState => {

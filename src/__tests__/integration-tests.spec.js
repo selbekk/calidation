@@ -190,7 +190,7 @@ describe('<FormValidation />', () => {
             <FormValidation
                 config={exampleConfig}
                 initialValues={initialValues}
-                valueTransforms={{
+                transforms={{
                     username: value => value.toUpperCase(),
                     optional: value => (parseInt(value) < 100 ? '0' : '1'),
                 }}

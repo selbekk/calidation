@@ -1,4 +1,4 @@
-import { areDirty, getFirstDefinedValue, removeFrom, uuid } from '../utilities';
+import { areDirty, getFirstDefinedValue, removeFrom } from '../utilities';
 
 const foo = 'foo';
 const bar = 'bar';

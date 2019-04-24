@@ -399,80 +399,13 @@ When you have a simple form to validate.
 
 #### Props
 
-##### `children: func.isRequired`
-
-The `children` function is called with an object with the following props:
-
-```js
-{
-    dirty: object, // Object with all fields isDirty state, keyed per field
-    errors: object, // object with the same keys as `fields`, but with error messages
-    fields: object, // object with the form field values, to make controlled components
-    resetAll: func, // call this to programmatically trigger a full state reset
-    setError: func, // callback accepting a diff object, updating errors like setState
-    setField: func, // callback accepting a diff object, updating fields like setState
-    submit: func, // call this to programmatically trigger a submitted state
-    submitted: bool, // flag showing whether the form has been submitted once or not
-}
-```
-
-The `setField` function is used whenever you want to update a field outside of
-a typical `change` event. Pass an object with the diff you want to apply (like
-React's `setState`), and it will update and reevaluate your form.
-
-##### `config: object.isRequired`
-
-The config object specifies what you want to validate, and which validators to
-apply to it.
-
-Each validator can accept an object with a `message` key or - in the case where
-you don't have to specify anything other than a validation message - just a
-string with the error message.
-
-##### `initialValues: object`
-
-The `initialValues` object lets you specify the initial values of the form
-fields. These values are available from the `fields` argument in the `children`
-function, which lets you control your form fields.
-
-##### `valueTransforms: object`
-
-The `valueTransforms` object lets you apply transforms to the value before it
-is stored and validated against. Each key should map to a field name and be a function
-that receives and returns a value. This is useful if you wish to convert a value's
-type or enforce casing.
-
-```js
-{
-    foo: (value) => parseInt(value),
-    bar: (value) => !!value ? 'YES' : 'NO',
-    etc: (value) => value.toLowerCase(),
-}
-```
-
-##### `onSubmit: func`
-
-This callback is fired whenever the form is submitted. That can happen whenever
-somebody clicks the submit button, or hits `enter` in the form.
-
-The `onSubmit` function is called with an object with the following props:
-
-```js
-{
-    dirty: object, // Object with all fields isDirty state, keyed per field
-    errors: object, // Object with all error messages, keyed per field
-    fields: object, // Object with all field inputs, keyed per field
-    isValid: bool, // Boolean indicating whether your form is valid or not
-    resetAll: func, // call this to programmatically trigger a full state reset
-    setError: func, // callback accepting a diff object, updating errors like setState
-}
-```
+Accepts all of the props from `Form` and `Validation below.
 
 ### `Form`
 
 `import { Form } from 'calidators';`
 
-When you want to wrap a complex form (in conjunction )
+When you want to wrap a complex form (in conjunction)
 
 #### Props
 
@@ -543,7 +476,7 @@ The `initialValues` object lets you specify the initial values of the form
 fields. These values are available from the `fields` argument in the `children`
 function, which lets you control your form fields.
 
-The `valueTransforms` object lets you apply transforms to the value before it
+The `transforms` object lets you apply transforms to the value before it
 is stored and validated against. Each key should map to a field name and be a function
 that receives and returns a value. This is useful if you wish to convert a value's
 type or enforce casing.
