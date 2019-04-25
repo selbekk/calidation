@@ -1,4 +1,4 @@
-import { areDirty, getFirstDefinedValue, removeFrom } from '../utilities';
+import { getFirstDefinedValue, removeFrom } from '../utilities';
 
 const foo = 'foo';
 const bar = 'bar';
@@ -6,34 +6,6 @@ const original = {
     foo,
     bar,
 };
-
-describe('areDirty', () => {
-    it('should compare objects', () => {
-        expect(areDirty(original, {})).toEqual({
-            foo: true,
-            bar: true,
-        });
-        expect(areDirty(original, { foo, bar })).toEqual({
-            foo: false,
-            bar: false,
-        });
-        expect(areDirty(original, { foo, bar: 'BAR' })).toEqual({
-            foo: false,
-            bar: true,
-        });
-        expect(areDirty(original, { foo: null, bar: 'BAR' })).toEqual({
-            foo: true,
-            bar: true,
-        });
-        expect(
-            areDirty(original, { foo: null, bar: 'BAR', wux: false }),
-        ).toEqual({
-            foo: true,
-            bar: true,
-            wux: true,
-        });
-    });
-});
 
 describe('getFirstDefinedValue', () => {
     it('should find and return first defined value', () => {

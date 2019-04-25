@@ -30,15 +30,15 @@ const ExampleForm = ({ fields, errors }) => (
         </div>
         <div>
             <label>
-                Optional{' '}
+                Delayed{' '}
                 <input
-                    name="optional"
-                    value={fields.optional}
+                    name="delayed"
+                    value={fields.delayed}
                     onChange={f => f}
                 />
             </label>
-            {errors.optional && (
-                <span data-testid="optional-error">{errors.optional}</span>
+            {errors.delayed && (
+                <span data-testid="delayed-error">{errors.delayed}</span>
             )}
         </div>
     </Fragment>
@@ -52,10 +52,9 @@ const exampleConfig = {
         isRequired: 'email required',
         isEmail: 'email invalid',
     },
-    optional: {
-        isMinLength: {
-            length: 3,
-            message: 'optional invalid',
+    delayed: {
+        isRequired: {
+            message: 'delayed invalid',
             validateIf: ({ isDirty }) => isDirty,
         },
     },
@@ -91,7 +90,7 @@ describe('<FormValidation />', () => {
             'username required',
         );
         expect(getByTestId('email-error').textContent).toBe('email required');
-        expect(queryByTestId('optional-error')).toBeNull();
+        expect(queryByTestId('delayed-error')).toBeNull();
 
         fireEvent.change(getByLabelText(/username/i), {
             target: { name: 'username', value: 'my username' },
@@ -99,21 +98,20 @@ describe('<FormValidation />', () => {
         fireEvent.change(getByLabelText(/email/i), {
             target: { name: 'email', value: 'an invalid email' },
         });
-        fireEvent.change(getByLabelText(/optional/i), {
-            target: { name: 'optional', value: 'hi' },
+        fireEvent.change(getByLabelText(/delayed/i), {
+            target: { name: 'delayed', value: 'foo' },
         });
 
         expect(queryByTestId('username-error')).toBeNull();
         expect(getByTestId('email-error').textContent).toBe('email invalid');
-        expect(getByTestId('optional-error').textContent).toBe(
-            'optional invalid',
-        );
 
-        fireEvent.change(getByLabelText(/optional/i), {
-            target: { name: 'optional', value: 'foo' },
+        fireEvent.change(getByLabelText(/delayed/i), {
+            target: { name: 'delayed', value: '' },
         });
 
-        expect(queryByTestId('optional-error')).toBeNull();
+        expect(getByTestId('delayed-error').textContent).toBe(
+            'delayed invalid',
+        );
     });
 
     it('calls the onSubmit prop with the correct params', () => {
@@ -131,14 +129,14 @@ describe('<FormValidation />', () => {
             dirty: {
                 username: false,
                 email: false,
-                optional: false,
+                delayed: false,
             },
             errors: {
                 username: 'username required',
                 email: 'email required',
-                optional: null,
+                delayed: null,
             },
-            fields: { username: '', email: '', optional: '' },
+            fields: { username: '', email: '', delayed: '' },
             isValid: false,
             resetAll: expect.any(Function),
             setError: expect.any(Function),
@@ -180,19 +178,19 @@ describe('<FormValidation />', () => {
 
         expect(queryByTestId('email-error').textContent).toBe('email required');
 
-        expect(getByLabelText(/optional/i).value).toBe('');
-        expect(queryByTestId('optional-error')).toBeNull();
+        expect(getByLabelText(/delayed/i).value).toBe('');
+        expect(queryByTestId('delayed-error')).toBeNull();
     });
 
     it('transforms values (initial & after change)', () => {
-        const initialValues = { username: 'foo', optional: '77' };
+        const initialValues = { username: 'foo', delayed: '77' };
         const { getByLabelText, queryByTestId } = render(
             <FormValidation
                 config={exampleConfig}
                 initialValues={initialValues}
                 transforms={{
                     username: value => value.toUpperCase(),
-                    optional: value => (parseInt(value) < 100 ? '0' : '1'),
+                    delayed: value => (parseInt(value) < 100 ? '0' : '1'),
                 }}
             >
                 {props => <ExampleForm {...props} />}
@@ -207,13 +205,13 @@ describe('<FormValidation />', () => {
 
         expect(getByLabelText(/username/i).value).toBe('BAR');
 
-        expect(getByLabelText(/optional/i).value).toBe('0');
+        expect(getByLabelText(/delayed/i).value).toBe('0');
 
-        fireEvent.change(getByLabelText(/optional/i), {
-            target: { name: 'optional', value: '109' },
+        fireEvent.change(getByLabelText(/delayed/i), {
+            target: { name: 'delayed', value: '109' },
         });
 
-        expect(getByLabelText(/optional/i).value).toBe('1');
+        expect(getByLabelText(/delayed/i).value).toBe('1');
     });
 });
 
@@ -363,7 +361,7 @@ describe('<Form> and <Validation /> side by side', () => {
                 fields: {
                     username: 'selbekk',
                     email: '',
-                    optional: '',
+                    delayed: '',
                 },
             }),
         );

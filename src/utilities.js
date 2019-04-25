@@ -1,17 +1,3 @@
-export const areDirty = (original, current) => {
-    const keys = [
-        ...new Set([...Object.keys(original), ...Object.keys(current)]),
-    ];
-
-    return keys.reduce(
-        (obj, key) => ({
-            ...obj,
-            [key]: original[key] !== current[key],
-        }),
-        {},
-    );
-};
-
 export const getFirstDefinedValue = (...values) =>
     values.find(value => value !== undefined);
 
