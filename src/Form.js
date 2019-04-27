@@ -7,15 +7,17 @@ import { removeFrom } from './utilities';
 
 const propTypes = {
     onChange: func,
-    onSubmit: func,
     onReset: func,
+    onSubmit: func,
+    onUpdate: func,
 };
 
 class Form extends Component {
     static defaultProps = {
         onChange: e => {},
-        onSubmit: c => {},
         onReset: () => {},
+        onSubmit: c => {},
+        onUpdate: c => {},
     };
 
     static propTypes = {
@@ -35,6 +37,22 @@ class Form extends Component {
 
     initialValues = {};
     transforms = {};
+
+    getContext = () => {
+        const { dirty, errors, fields, submitted } = this.state;
+
+        return {
+            dirty,
+            errors,
+            fields,
+            isValid: Object.values(errors).every(error => error === null),
+            resetAll: this.onReset,
+            setError: this.setError,
+            setField: this.setField,
+            submit: this.onSubmit,
+            submitted,
+        };
+    };
 
     onChange = e => {
         this.props.onChange(e);
@@ -61,32 +79,37 @@ class Form extends Component {
 
         const { dirty, errors, fields } = this.state;
 
-        this.setState({
-            dirty: Object.keys(dirty).reduce(
-                (allDirty, field) => ({
-                    ...allDirty,
-                    [field]: false,
-                }),
-                {},
-            ),
-            errors: Object.keys(errors).reduce(
-                (allErrors, field) => ({
-                    ...allErrors,
-                    [field]: null,
-                }),
-                {},
-            ),
-            fields: Object.keys(fields).reduce(
-                (allFields, field) => ({
-                    ...allFields,
-                    [field]: this.initialValues[field],
-                }),
-                {},
-            ),
-            submitted: false,
-        });
+        this.setState(
+            {
+                dirty: Object.keys(dirty).reduce(
+                    (allDirty, field) => ({
+                        ...allDirty,
+                        [field]: false,
+                    }),
+                    {},
+                ),
+                errors: Object.keys(errors).reduce(
+                    (allErrors, field) => ({
+                        ...allErrors,
+                        [field]: null,
+                    }),
+                    {},
+                ),
+                fields: Object.keys(fields).reduce(
+                    (allFields, field) => ({
+                        ...allFields,
+                        [field]: this.initialValues[field],
+                    }),
+                    {},
+                ),
+                submitted: false,
+            },
+            () => {
+                this.onUpdate();
 
-        this.props.onReset();
+                this.props.onReset();
+            },
+        );
     };
 
     onSubmit = e => {
@@ -94,18 +117,13 @@ class Form extends Component {
             e.preventDefault();
         }
 
-        const { dirty, errors, fields } = this.state;
-
-        this.setState({ submitted: true });
-
-        this.props.onSubmit({
-            dirty,
-            errors,
-            fields,
-            isValid: Object.values(errors).every(error => error === null),
-            resetAll: this.onReset,
-            setError: this.setError,
+        this.setState({ submitted: true }, () => {
+            this.props.onSubmit(this.getContext());
         });
+    };
+
+    onUpdate = () => {
+        this.props.onUpdate(this.getContext());
     };
 
     setField = diff => {
@@ -124,22 +142,28 @@ class Form extends Component {
             ),
         };
 
-        this.setState({
-            dirty: areDirty,
-            errors: this.validate(config, allFields, areDirty),
-            fields: allFields,
-            submitted: false,
-        });
+        this.setState(
+            {
+                dirty: areDirty,
+                errors: this.validate(config, allFields, areDirty),
+                fields: allFields,
+                submitted: false,
+            },
+            this.onUpdate,
+        );
     };
 
     setError = diff => {
-        this.setState({
-            errors: {
-                ...this.state.errors,
-                ...diff,
+        this.setState(
+            {
+                errors: {
+                    ...this.state.errors,
+                    ...diff,
+                },
+                submitted: false,
             },
-            submitted: false,
-        });
+            this.onUpdate,
+        );
     };
 
     validate = (allConfig, allFields, areDirty) =>
@@ -245,7 +269,7 @@ class Form extends Component {
                 errors: this.validate(config, fields, dirty),
                 fields,
             };
-        });
+        }, this.onUpdate);
     };
 
     unregisterSubComponent = subComponentConfig => {
@@ -265,22 +289,14 @@ class Form extends Component {
                 errors: this.validate(config, fields, dirty),
                 fields,
             };
-        });
+        }, this.onUpdate);
     };
 
     render() {
-        const { children, onSubmit, ...rest } = this.props;
-        const { dirty, errors, fields, submitted } = this.state;
+        const { children, onSubmit, onUpdate, ...rest } = this.props;
         const formContext = {
-            dirty,
-            errors,
-            fields,
+            ...this.getContext(),
             register: this.registerSubComponent,
-            resetAll: this.onReset,
-            setError: this.setError,
-            setField: this.setField,
-            submit: this.onSubmit,
-            submitted,
             unregister: this.unregisterSubComponent,
         };
 

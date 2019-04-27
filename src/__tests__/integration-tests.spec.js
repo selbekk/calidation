@@ -114,6 +114,19 @@ describe('<FormValidation />', () => {
         );
     });
 
+    it('calls the onReset prop', () => {
+        const resetSpy = jest.fn();
+        const { container } = render(
+            <FormValidation config={exampleConfig} onReset={resetSpy}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        fireEvent(container.querySelector('form'), new Event('reset'));
+
+        expect(resetSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('calls the onSubmit prop with the correct params', () => {
         const submitSpy = jest.fn();
         const { container } = render(
@@ -140,6 +153,87 @@ describe('<FormValidation />', () => {
             isValid: false,
             resetAll: expect.any(Function),
             setError: expect.any(Function),
+            setField: expect.any(Function),
+            submit: expect.any(Function),
+            submitted: true,
+        });
+    });
+
+    it('calls the onUpdate prop with the correct params', () => {
+        const updateSpy = jest.fn();
+        const { container, getByLabelText } = render(
+            <FormValidation config={exampleConfig} onUpdate={updateSpy}>
+                {props => <ExampleForm {...props} />}
+            </FormValidation>,
+        );
+
+        expect(updateSpy).toHaveBeenCalledTimes(1); // register
+        expect(updateSpy).toHaveBeenCalledWith({
+            dirty: {
+                username: false,
+                email: false,
+                delayed: false,
+            },
+            errors: {
+                username: 'username required',
+                email: 'email required',
+                delayed: null,
+            },
+            fields: { username: '', email: '', delayed: '' },
+            isValid: false,
+            resetAll: expect.any(Function),
+            setError: expect.any(Function),
+            setField: expect.any(Function),
+            submit: expect.any(Function),
+            submitted: false,
+        });
+
+        fireEvent.change(getByLabelText(/email/i), {
+            target: { name: 'email', value: 'test@test.com' },
+        });
+
+        expect(updateSpy).toHaveBeenCalledTimes(2); // change
+        expect(updateSpy).toHaveBeenCalledWith({
+            dirty: {
+                username: false,
+                email: true,
+                delayed: false,
+            },
+            errors: {
+                username: 'username required',
+                email: null,
+                delayed: null,
+            },
+            fields: { username: '', email: 'test@test.com', delayed: '' },
+            isValid: false,
+            resetAll: expect.any(Function),
+            setError: expect.any(Function),
+            setField: expect.any(Function),
+            submit: expect.any(Function),
+            submitted: false,
+        });
+
+        fireEvent(container.querySelector('form'), new Event('reset'));
+
+        expect(updateSpy).toHaveBeenCalledTimes(3); // reset
+        expect(updateSpy).toHaveBeenCalledWith({
+            dirty: {
+                username: false,
+                email: false,
+                delayed: false,
+            },
+            errors: {
+                username: 'username required',
+                email: 'email required',
+                delayed: null,
+            },
+            fields: { username: '', email: '', delayed: '' },
+            isValid: false,
+            resetAll: expect.any(Function),
+            setError: expect.any(Function),
+            setField: expect.any(Function),
+            submit: expect.any(Function),
+            submitted: false,
         });
     });
 

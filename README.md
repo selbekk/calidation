@@ -409,6 +409,21 @@ When you want to wrap a complex form (in conjunction)
 
 #### Props
 
+##### `onChange: func`
+
+This callback is fired whenever a form change event is triggered. This could happen on any input
+in the form, not necessarily associated with a validated input. This callback is also called before
+any state changes have been made.
+
+The `onChange` function is call with he original change event as it's only prop.
+
+##### `onReset: func`
+
+This callback is fired whenever the form is reset. That can happen whenever somebody clicks a button with type "reset",
+or calls the `resetAll` function passed in the `children` function.
+
+The `onReset` function is called with no parameters.
+
 ##### `onSubmit: func`
 
 This callback is fired whenever the form is submitted. That can happen whenever
@@ -425,15 +440,33 @@ The `onSubmit` function is called with an object with the following props:
     isValid: bool, // Boolean indicating whether your form is valid or not
     resetAll: func, // call this to programmatically trigger a full state reset
     setError: func, // callback accepting a diff object, updating errors like setState
+    setField: func, // callback accepting a diff object, updating fields like setState
+    submit: func, // call this to programmatically trigger a submitted state
+    submitted: bool, // flag showing whether the form has been submitted once or not
 }
 ```
 
-##### `onReset: func`
+##### `onUpdate: func`
 
-This callback is fired whenever the form is reset. That can happen whenever somebody clicks a button with type "reset",
-or calls the `resetAll` function passed in the `children` function.
+This callback is fired whenever the form state changes. This can happen when `Validation` components
+are `register`ed or `unregister`ed, when a field is updated by the user or when the `setField` method is called,
+when the `setError` method is called, or when the form is reset or the `resetAll` method is called.
 
-The `onReset` function is called with no parameters.
+The `onUpdate` function is called with an object with the follow props:
+
+```js
+{
+    dirty: object, // Object with all fields isDirty state, keyed per field
+    errors: object, // Object with all error messages, keyed per field
+    fields: object, // Object with all field inputs, keyed per field
+    isValid: bool, // Boolean indicating whether your form is valid or not
+    resetAll: func, // call this to programmatically trigger a full state reset
+    setError: func, // callback accepting a diff object, updating errors like setState
+    setField: func, // callback accepting a diff object, updating fields like setState
+    submit: func, // call this to programmatically trigger a submitted state
+    submitted: bool, // flag showing whether the form has been submitted once or not
+}
+```
 
 ### `Validation`
 
