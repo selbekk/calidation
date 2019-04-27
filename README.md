@@ -476,6 +476,8 @@ The `initialValues` object lets you specify the initial values of the form
 fields. These values are available from the `fields` argument in the `children`
 function, which lets you control your form fields.
 
+##### `transforms: object`
+
 The `transforms` object lets you apply transforms to the value before it
 is stored and validated against. Each key should map to a field name and be a function
 that receives and returns a value. This is useful if you wish to convert a value's
@@ -498,7 +500,7 @@ app with this at the top level.
 
 #### Props
 
-##### `validators`
+##### `validators: object`
 
 An object with functions according to the
 [validators](https://github.com/selbekk/calidators) spec. TL;DR: A function that
