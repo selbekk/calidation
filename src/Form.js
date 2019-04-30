@@ -79,7 +79,7 @@ class Form extends Component {
 
         const { dirty, errors, fields } = this.state;
 
-        this.setState(
+        this.setStateInternal(
             {
                 dirty: Object.keys(dirty).reduce(
                     (allDirty, field) => ({
@@ -104,11 +104,7 @@ class Form extends Component {
                 ),
                 submitted: false,
             },
-            () => {
-                this.onUpdate();
-
-                this.props.onReset();
-            },
+            this.props.onReset,
         );
     };
 
@@ -117,13 +113,17 @@ class Form extends Component {
             e.preventDefault();
         }
 
-        this.setState({ submitted: true }, () => {
-            this.props.onSubmit(this.getContext());
-        });
+        this.setStateInternal({ submitted: true });
     };
 
-    onUpdate = () => {
-        this.props.onUpdate(this.getContext());
+    setError = diff => {
+        this.setStateInternal({
+            errors: {
+                ...this.state.errors,
+                ...diff,
+            },
+            submitted: false,
+        });
     };
 
     setField = diff => {
@@ -142,28 +142,20 @@ class Form extends Component {
             ),
         };
 
-        this.setState(
-            {
-                dirty: areDirty,
-                errors: this.validate(config, allFields, areDirty),
-                fields: allFields,
-                submitted: false,
-            },
-            this.onUpdate,
-        );
+        this.setStateInternal({
+            dirty: areDirty,
+            errors: this.validate(config, allFields, areDirty),
+            fields: allFields,
+            submitted: false,
+        });
     };
 
-    setError = diff => {
-        this.setState(
-            {
-                errors: {
-                    ...this.state.errors,
-                    ...diff,
-                },
-                submitted: false,
-            },
-            this.onUpdate,
-        );
+    setStateInternal = (updater, callback) => {
+        this.setState(updater, (...args) => {
+            callback(...args);
+
+            this.props.onUpdate(this.getContext());
+        });
     };
 
     validate = (allConfig, allFields, areDirty) =>
@@ -243,7 +235,7 @@ class Form extends Component {
             ...transforms,
         };
 
-        this.setState(prevState => {
+        this.setStateInternal(prevState => {
             const config = {
                 ...prevState.config,
                 ...subComponentConfig,
@@ -269,7 +261,7 @@ class Form extends Component {
                 errors: this.validate(config, fields, dirty),
                 fields,
             };
-        }, this.onUpdate);
+        });
     };
 
     unregisterSubComponent = subComponentConfig => {
@@ -278,7 +270,7 @@ class Form extends Component {
         this.initialValues = removeFrom(this.initialValues)(keys);
         this.transforms = removeFrom(this.transforms)(keys);
 
-        this.setState(prevState => {
+        this.setStateInternal(prevState => {
             const config = removeFrom(prevState.config)(keys);
             const dirty = removeFrom(prevState.dirty)(keys);
             const fields = removeFrom(prevState.fields)(keys);
@@ -289,7 +281,7 @@ class Form extends Component {
                 errors: this.validate(config, fields, dirty),
                 fields,
             };
-        }, this.onUpdate);
+        });
     };
 
     render() {

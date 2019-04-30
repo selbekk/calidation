@@ -415,7 +415,7 @@ This callback is fired whenever a form change event is triggered. This could hap
 in the form, not necessarily associated with a validated input. This callback is also called before
 any state changes have been made.
 
-The `onChange` function is call with he original change event as it's only prop.
+The `onChange` function is called with the original change event as its only prop.
 
 ##### `onReset: func`
 
