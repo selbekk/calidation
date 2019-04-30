@@ -59,7 +59,7 @@ class Form extends Component {
 
         const { checked, name, type, value } = e.target;
 
-        if (!this.state.config[name]) {
+        if (e.defaultPrevented || !this.state.config[name]) {
             return;
         }
 
@@ -113,7 +113,9 @@ class Form extends Component {
             e.preventDefault();
         }
 
-        this.setStateInternal({ submitted: true });
+        this.setStateInternal({ submitted: true }, () => {
+            this.props.onSubmit(this.getContext());
+        });
     };
 
     setError = diff => {
@@ -150,7 +152,7 @@ class Form extends Component {
         });
     };
 
-    setStateInternal = (updater, callback) => {
+    setStateInternal = (updater, callback = () => {}) => {
         this.setState(updater, (...args) => {
             callback(...args);
 
