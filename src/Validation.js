@@ -22,15 +22,16 @@ class Validation extends Component {
         // OwnProps
         ...propTypes,
         // FormContext
-        dirty: shape({}),
-        errors: shape({}),
-        fields: shape({}),
+        dirty: shape({}).isRequired,
+        errors: shape({}).isRequired,
+        fields: shape({}).isRequired,
+        isValid: bool.isRequired,
         register: func.isRequired,
         resetAll: func.isRequired,
         setError: func.isRequired,
         setField: func.isRequired,
         submit: func.isRequired,
-        submitted: bool,
+        submitted: bool.isRequired,
         unregister: func.isRequired,
     };
 
@@ -73,6 +74,7 @@ class Validation extends Component {
             dirty,
             errors,
             fields,
+            isValid,
             resetAll,
             setError,
             setField,
@@ -83,6 +85,7 @@ class Validation extends Component {
             dirty,
             errors,
             fields,
+            isValid,
             resetAll,
             setError,
             setField,
