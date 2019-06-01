@@ -52,7 +52,7 @@
         }
     },
     "dependencies": {
-        "calidators": "^1.0.0",
+        "calidators": "^3.0.0",
         "invariant": "^2.2.4",
         "prop-types": "^15.6.1"
     },
