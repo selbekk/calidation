@@ -1327,10 +1327,10 @@ cachedir@^1.1.0:
   dependencies:
     os-homedir "^1.0.1"
 
-calidators@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/calidators/-/calidators-1.1.0.tgz#a0cc897e8162256408e84a0c0d84172e9631342b"
-  integrity sha512-hdVpmLeK00AU6gpo9TbbwnCjdagTPnMUj4ozSetlzQ6Wj7YckL3OHnlYm6GtF7oIJ+YCiJPzoYE+0+JXNnyyYw==
+calidators@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/calidators/-/calidators-2.1.0.tgz#5a4882ced8ed2fdd00904342254db4bbc0db112e"
+  integrity sha512-zbOqzBZ8GuxBwJviLT6Fl3FTKGN3CnEBWKylzkhfUlJ7pMVh0swSRZrmej/TyX790R53vrKHV5DaAzPmgy2o6Q==
   dependencies:
     invariant "^2.2.4"
 
