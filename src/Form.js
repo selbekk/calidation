@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { func, shape } from 'prop-types';
 import invariant from 'invariant';
+
 import { withValidators } from './ValidatorsContext';
 import { FormProvider } from './FormContext';
 import { removeFrom } from './utilities';
@@ -181,20 +182,30 @@ class Form extends Component {
         allFields,
         allErrors,
         areDirty,
-    ) =>
-        Object.entries(fieldValidators).reduce(
+    ) => {
+        const { validators } = this.props;
+
+        // if field is optional and the value doesn't pass the isRequired validator, skip all validators
+        if (
+            !fieldValidators.isRequired &&
+            validators.isRequired({})(allFields[fieldName]) !== null
+        ) {
+            return null;
+        }
+
+        return Object.entries(fieldValidators).reduce(
             (error, [validatorName, validatorConfig]) => {
                 if (error) {
                     return error;
                 }
 
-                const validator = this.props.validators[validatorName];
+                const validator = validators[validatorName];
 
                 invariant(
                     validator,
                     "You specified a validator that doesn't exist. You " +
                         `specified ${validatorName}. Available validators: \n\n` +
-                        Object.keys(this.props.validators).join(',\n'),
+                        Object.keys(validators).join(',\n'),
                 );
 
                 const context = {
@@ -226,6 +237,7 @@ class Form extends Component {
             },
             null,
         );
+    };
 
     registerSubComponent = (subComponentConfig, transforms, initialValues) => {
         this.initialValues = {

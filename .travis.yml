@@ -1,19 +1,19 @@
 language: node_js
 cache:
-  directories:
-    - ~/.npm
+    directories:
+        - ~/.npm
 notifications:
-  email: false
+    email: false
 node_js:
-  - '9'
+    - '10'
 install:
-  - yarn global add codecov
-  - yarn
+    - yarn global add codecov
+    - yarn
 script:
-  - yarn test:coverage && codecov
-  - yarn build
+    - yarn test:coverage && codecov
+    - yarn build
 after_success:
-  - yarn travis-deploy-once "yarn semantic-release"
+    - yarn travis-deploy-once "yarn semantic-release"
 branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
+    except:
+        - /^v\d+\.\d+\.\d+$/
