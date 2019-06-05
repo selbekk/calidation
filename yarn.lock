@@ -1327,12 +1327,13 @@ cachedir@^1.1.0:
   dependencies:
     os-homedir "^1.0.1"
 
-calidators@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/calidators/-/calidators-1.1.0.tgz#a0cc897e8162256408e84a0c0d84172e9631342b"
-  integrity sha512-hdVpmLeK00AU6gpo9TbbwnCjdagTPnMUj4ozSetlzQ6Wj7YckL3OHnlYm6GtF7oIJ+YCiJPzoYE+0+JXNnyyYw==
+calidators@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/calidators/-/calidators-3.0.0.tgz#5d760cc68d37f0652cccbba406c5aaed279a6855"
+  integrity sha512-XzOciNeMXdyqhK+Xrh7JXlXdd7CjFQRjOERn8tJGFRHhe3uAOhkX1nzUpzrn/br7a+gR9R20t1unTtl3Qp2KeQ==
   dependencies:
     invariant "^2.2.4"
+    warning "^4.0.3"
 
 call-me-maybe@^1.0.1:
   version "1.0.1"
@@ -6227,6 +6228,13 @@ walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+warning@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+  integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+  dependencies:
+    loose-envify "^1.0.0"
 
 watch@~0.18.0:
   version "0.18.0"
