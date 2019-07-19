@@ -125,7 +125,6 @@ class Form extends Component {
                 ...this.state.errors,
                 ...diff,
             },
-            submitted: false,
         });
     };
 
@@ -148,8 +147,7 @@ class Form extends Component {
         this.setStateInternal({
             dirty: areDirty,
             errors: this.validate(config, allFields, areDirty),
-            fields: allFields,
-            submitted: false,
+            fields: allFields
         });
     };
 
@@ -312,6 +310,7 @@ class Form extends Component {
                 onChange={this.onChange}
                 onSubmit={this.onSubmit}
                 onReset={this.onReset}
+                novalidate
             >
                 <FormProvider value={formContext}>{children}</FormProvider>
             </form>
