@@ -125,7 +125,6 @@ class Form extends Component {
                 ...this.state.errors,
                 ...diff,
             },
-            submitted: false,
         });
     };
 
