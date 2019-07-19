@@ -3,11 +3,7 @@
     "version": "0.0.0-semantically-released",
     "description": "A red hot validation library for React",
     "main": "dist/index.js",
-    "keywords": [
-        "validation",
-        "react",
-        "react validation"
-    ],
+    "keywords": ["validation", "react", "react validation"],
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -49,10 +45,7 @@
         "react": "^16.3.1",
         "react-dom": "^16.3.1"
     },
-    "files": [
-        "README.md",
-        "dist"
-    ],
+    "files": ["README.md", "dist"],
     "config": {
         "commitizen": {
             "path": "node_modules/cz-conventional-changelog"

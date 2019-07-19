@@ -147,7 +147,7 @@ class Form extends Component {
         this.setStateInternal({
             dirty: areDirty,
             errors: this.validate(config, allFields, areDirty),
-            fields: allFields
+            fields: allFields,
         });
     };
 
@@ -307,10 +307,10 @@ class Form extends Component {
         return (
             <form
                 {...rest}
+                noValidate
                 onChange={this.onChange}
                 onSubmit={this.onSubmit}
                 onReset={this.onReset}
-                novalidate
             >
                 <FormProvider value={formContext}>{children}</FormProvider>
             </form>
