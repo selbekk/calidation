@@ -78,10 +78,8 @@ class Form extends Component {
             e.preventDefault();
         }
 
-        const { dirty, errors, fields } = this.state;
-
         this.setStateInternal(
-            {
+            ({ dirty, errors, fields }) => ({
                 dirty: Object.keys(dirty).reduce(
                     (allDirty, field) => ({
                         ...allDirty,
@@ -104,7 +102,7 @@ class Form extends Component {
                     {},
                 ),
                 submitted: false,
-            },
+            }),
             this.props.onReset,
         );
     };
@@ -120,34 +118,34 @@ class Form extends Component {
     };
 
     setError = diff => {
-        this.setStateInternal({
+        this.setStateInternal(({ errors }) => ({
             errors: {
-                ...this.state.errors,
+                ...errors,
                 ...diff,
             },
-        });
+        }));
     };
 
     setField = diff => {
-        const { config, dirty, fields } = this.state;
-        const allFields = { ...fields, ...diff };
-        const areDirty = {
-            ...dirty,
-            ...Object.keys(diff).reduce(
-                (allDirty, field) => ({
-                    ...allDirty,
-                    [field]:
-                        dirty[field] ||
-                        diff[field] !== this.initialValues[field],
-                }),
-                {},
-            ),
-        };
-
-        this.setStateInternal({
-            dirty: areDirty,
-            errors: this.validate(config, allFields, areDirty),
-            fields: allFields,
+        this.setStateInternal(({ config, dirty, fields }) => {
+            const allFields = { ...fields, ...diff };
+            const areDirty = {
+                ...dirty,
+                ...Object.keys(diff).reduce(
+                    (allDirty, field) => ({
+                        ...allDirty,
+                        [field]:
+                            dirty[field] ||
+                            diff[field] !== this.initialValues[field],
+                    }),
+                    {},
+                ),
+            };
+            return {
+                dirty: areDirty,
+                errors: this.validate(config, allFields, areDirty),
+                fields: allFields,
+            };
         });
     };
 
