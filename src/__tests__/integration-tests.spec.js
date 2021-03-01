@@ -40,6 +40,7 @@ const ExampleForm = ({ fields, errors }) => (
                 <span data-testid="delayed-error">{errors.delayed}</span>
             )}
         </div>
+        <input type="reset" data-testid="reset-button" value="Reset" />
     </Fragment>
 );
 
@@ -115,13 +116,13 @@ describe('<FormValidation />', () => {
 
     it('calls the onReset prop', () => {
         const resetSpy = jest.fn();
-        const { container } = render(
+        const { getByTestId } = render(
             <FormValidation config={exampleConfig} onReset={resetSpy}>
                 {props => <ExampleForm {...props} />}
             </FormValidation>,
         );
 
-        fireEvent(container.querySelector('form'), new Event('reset'));
+        fireEvent.click(getByTestId('reset-button'));
 
         expect(resetSpy).toHaveBeenCalledTimes(1);
     });
@@ -160,7 +161,7 @@ describe('<FormValidation />', () => {
 
     it('calls the onUpdate prop with the correct params', () => {
         const updateSpy = jest.fn();
-        const { container, getByLabelText } = render(
+        const { getByTestId, getByLabelText } = render(
             <FormValidation config={exampleConfig} onUpdate={updateSpy}>
                 {props => <ExampleForm {...props} />}
             </FormValidation>,
@@ -212,7 +213,7 @@ describe('<FormValidation />', () => {
             submitted: false,
         });
 
-        fireEvent(container.querySelector('form'), new Event('reset'));
+        fireEvent.click(getByTestId('reset-button'));
 
         expect(updateSpy).toHaveBeenCalledTimes(3); // reset
         expect(updateSpy).toHaveBeenCalledWith({
