@@ -3,7 +3,11 @@
     "version": "0.0.0-semantically-released",
     "description": "A red hot validation library for React",
     "main": "dist/index.js",
-    "keywords": ["validation", "react", "react validation"],
+    "keywords": [
+        "validation",
+        "react",
+        "react validation"
+    ],
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -33,18 +37,21 @@
         "jest": "^26.6.3",
         "prettier": "^1.11.1",
         "pretty-quick": "^1.4.1",
-        "react": "^16.3.1",
-        "react-dom": "^16.3.1",
+        "react": "17",
+        "react-dom": "17",
         "regenerator-runtime": "^0.13.7",
         "rimraf": "^2.6.2",
         "semantic-release": "^15.1.5",
         "travis-deploy-once": "^4.4.1"
     },
     "peerDependencies": {
-        "react": "^16.3.1",
-        "react-dom": "^16.3.1"
+        "react": "^16.3.1 || 17.x",
+        "react-dom": "^16.3.1 || 17.x"
     },
-    "files": ["README.md", "dist"],
+    "files": [
+        "README.md",
+        "dist"
+    ],
     "config": {
         "commitizen": {
             "path": "node_modules/cz-conventional-changelog"
