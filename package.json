@@ -3,7 +3,11 @@
     "version": "0.0.0-semantically-released",
     "description": "A red hot validation library for React",
     "main": "dist/index.js",
-    "keywords": ["validation", "react", "react validation"],
+    "keywords": [
+        "validation",
+        "react",
+        "react validation"
+    ],
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -14,38 +18,40 @@
         "build": "babel --out-dir dist --ignore *.spec.js src",
         "precommit": "pretty-quick --staged",
         "commit": "git-cz",
-        "test": "jest",
-        "test:watch": "jest --watch --coverage",
+        "test": "jest src",
+        "test:watch": "jest --watch --coverage src",
         "test:coverage": "jest --coverage",
         "semantic-release": "semantic-release",
         "travis-deploy-once": "travis-deploy-once"
     },
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-plugin-transform-class-properties": "^6.24.1",
-        "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
-        "babel-plugin-transform-object-rest-spread": "^6.26.0",
-        "babel-preset-env": "^1.6.1",
-        "babel-preset-react": "^6.24.1",
+        "@babel/cli": "^7.13.0",
+        "@babel/core": "^7.13.8",
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/preset-env": "^7.13.8",
+        "@babel/preset-react": "^7.12.13",
+        "@testing-library/react": "^11.2.5",
         "commitizen": "^2.9.6",
         "cz-conventional-changelog": "^2.1.0",
-        "dom-testing-library": "^1.1.0",
         "husky": "^0.14.3",
-        "jest": "^22.4.3",
+        "jest": "^26.6.3",
         "prettier": "^1.11.1",
         "pretty-quick": "^1.4.1",
-        "react": "^16.3.1",
-        "react-dom": "^16.3.1",
-        "react-testing-library": "^6.0.0",
+        "react": "17",
+        "react-dom": "17",
+        "regenerator-runtime": "^0.13.7",
         "rimraf": "^2.6.2",
         "semantic-release": "^15.1.5",
         "travis-deploy-once": "^4.4.1"
     },
     "peerDependencies": {
-        "react": "^16.3.1",
-        "react-dom": "^16.3.1"
+        "react": "^16.3.1 || 17.x",
+        "react-dom": "^16.3.1 || 17.x"
     },
-    "files": ["README.md", "dist"],
+    "files": [
+        "README.md",
+        "dist"
+    ],
     "config": {
         "commitizen": {
             "path": "node_modules/cz-conventional-changelog"
