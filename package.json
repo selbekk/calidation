@@ -41,7 +41,7 @@
         "react-dom": "17",
         "regenerator-runtime": "^0.13.7",
         "rimraf": "^2.6.2",
-        "semantic-release": "^15.1.5",
+        "semantic-release": "^17.2.3",
         "travis-deploy-once": "^4.4.1"
     },
     "peerDependencies": {
