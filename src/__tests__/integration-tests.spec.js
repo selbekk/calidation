@@ -1,8 +1,6 @@
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import React, { Fragment } from 'react';
-import { render, fireEvent, cleanup } from 'react-testing-library';
-
-import { Form, Validation, FormValidation, ValidatorsProvider } from '..';
-
+import { Form, FormValidation, Validation, ValidatorsProvider } from '..';
 const ExampleForm = ({ fields, errors }) => (
     <Fragment>
         <div>
