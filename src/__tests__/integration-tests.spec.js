@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import React, { Fragment } from 'react';
 import { Form, FormValidation, Validation, ValidatorsProvider } from '..';
+import 'regenerator-runtime';
 const ExampleForm = ({ fields, errors }) => (
     <Fragment>
         <div>
